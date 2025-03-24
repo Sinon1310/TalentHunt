@@ -10,12 +10,12 @@ const CompetitionDetails = () => {
   // Sample data - in a real app, this would be fetched from an API based on the ID
   const competition = {
     id: id,
-    name: "Annual Hackathon 2023",
+    name: "Annual Hackathon 2025",
     description: "Build innovative solutions for real-world problems in 48 hours. This hackathon focuses on creating technology that addresses sustainability challenges.",
-    date: "October 15-17, 2023",
+    date: "October 15-17, 2025",
     time: "9:00 AM - 5:00 PM",
     location: "University Main Campus, Building A",
-    registrationDeadline: "October 10, 2023",
+    registrationDeadline: "October 10, 2025",
     prizes: [
       "1st Place: $5,000",
       "2nd Place: $2,500",

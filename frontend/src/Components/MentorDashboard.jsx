@@ -11,7 +11,7 @@ const MentorDashboard = () => {
     {
       id: 1,
       name: "CodeCrafters",
-      competition: "Annual Hackathon 2023",
+      competition: "Annual Hackathon 2025",
       members: 3,
       progress: 40,
       lastActivity: "2 hours ago",
@@ -20,7 +20,7 @@ const MentorDashboard = () => {
     {
       id: 2,
       name: "DataDynamos",
-      competition: "Annual Hackathon 2023",
+      competition: "Annual Hackathon 2025",
       members: 2,
       progress: 25,
       lastActivity: "Yesterday",

@@ -10,23 +10,23 @@ const Landing = () => {
   const competitions = [
     {
       id: 1,
-      title: "Annual Hackathon 2023",
+      title: "Annual Hackathon 2025",
       description: "Build innovative solutions for real-world problems in 48 hours.",
-      image: "/placeholder.svg?height=300&width=500",
+      image: "https://tse3.mm.bing.net/th?id=OIP.R2D8fuAHWweBspHKgU2eLAHaEK&pid=Api&P=0&h=180?height=300&width=300",
       date: "Oct 15-17, 2025"
     },
     {
       id: 2,
       title: "Design Challenge",
       description: "Create user-centered designs for next-gen applications.",
-      image: "/placeholder.svg?height=300&width=500",
+      image: "/images/DesignContest.jpg?height=250&width=1200",
       date: "Nov 5-7, 2025"
     },
     {
       id: 3,
       title: "AI Innovation Contest",
       description: "Develop AI solutions that can transform industries.",
-      image: "/placeholder.svg?height=300&width=500",
+      image: "/images/ai.jpg?height=250&width=1200",
       date: "Dec 10-12, 2025"
     }
   ];
@@ -38,21 +38,21 @@ const Landing = () => {
       name: "Sinon Rodrigues",
       role: "Computer Science Student",
       quote: "This platform helped me find teammates with complementary skills. We won our first hackathon together!",
-      avatar: "/placeholder.svg?height=80&width=80"
+      avatar: "/images/demopic.jpg?"
     },
     {
       id: 2,
       name: "Aditya Nambar",
       role: "UI/UX Designer",
       quote: "The mentor matching was perfect. Our mentor provided invaluable guidance throughout the competition.",
-      avatar: "/placeholder.svg?height=80&width=80"
+      avatar: "/images/nambar.jpg?"
     },
     {
       id: 3,
       name: "Dr. Joseph",
       role: "Faculty Mentor",
       quote: "As a mentor, I can easily track my teams' progress and provide timely feedback. It's a game-changer.",
-      avatar: "/placeholder.svg?height=80&width=80"
+      avatar: "/images/jos.jpg?"
     }
   ];
 
@@ -216,27 +216,30 @@ const Landing = () => {
                 className="flex transition-transform duration-500 ease-in-out" 
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
               >
-                {competitions.map((competition) => (
-                  <div key={competition.id} className="w-full flex-shrink-0 px-4">
-                    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                      <img 
-                        src={competition.image || "/placeholder.svg"} 
-                        alt={competition.title} 
-                        className="w-full h-48 object-cover"
-                      />
-                      <div className="p-6">
-                        <h3 className="text-xl font-semibold mb-2">{competition.title}</h3>
-                        <p className="text-gray-600 mb-3">{competition.description}</p>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-blue-600 font-medium">{competition.date}</span>
-                          <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
-                            Learn More
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+               {competitions.map((competition) => (
+  <div key={competition.id} className="w-full flex-shrink-0 px-4">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="h-64 relative"> {/* Increased height and added relative positioning */}
+        <img 
+          src={competition.image || "/placeholder.svg"} 
+          alt={competition.title} 
+          className="w-full h-full object-cover absolute inset-0" /* Updated image styling */
+          style={{ objectFit: 'cover' }}
+        />
+      </div>
+      <div className="p-6">
+        <h3 className="text-xl font-semibold mb-2">{competition.title}</h3>
+        <p className="text-gray-600 mb-3">{competition.description}</p>
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-blue-600 font-medium">{competition.date}</span>
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+            Learn More
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+))}
               </div>
             </div>
             
@@ -286,7 +289,8 @@ const Landing = () => {
                   <img 
                     src={testimonial.avatar || "/placeholder.svg"} 
                     alt={testimonial.name} 
-                    className="w-12 h-12 rounded-full mr-4"
+                    className="w-16 h-16 rounded-full mr-4"
+                    
                   />
                   <div>
                     <h3 className="font-semibold">{testimonial.name}</h3>
