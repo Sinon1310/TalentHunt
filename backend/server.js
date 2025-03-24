@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 });
 
 app.post('/student_api/signup', async (req, res) => {
-    const { student_email, student_password } = req.body;
+    const { student_name,student_email, student_password ,role} = req.body;
 
     if (!student_email || !student_password) {
         return res.status(400).json({ error: "Missing email or password" });
@@ -30,7 +30,7 @@ app.post('/student_api/signup', async (req, res) => {
         //const newStudent = new Student({ email: student_email, password: student_password });
         //await newStudent.save();
         res.status(201).json({ message: "Student registered successfully" });
-        console.log(student_email+" "+student_password);
+        console.log(student_email+" "+student_password+" "+role+" "+student_name);
     } catch (error) {
         console.error("Error saving student:", error);
         res.status(500).json({ error: "Failed to register student" });
