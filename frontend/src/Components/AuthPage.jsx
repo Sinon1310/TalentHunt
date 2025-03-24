@@ -225,7 +225,7 @@ const AuthPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className={`input-field pl-10 ${errors.email ? 'border-red-500 focus:ring-red-500' : ''}`}
-                  placeholder="you@example.com"
+                  placeholder="you@gmail.com"
                 />
               </div>
               {errors.email && (
