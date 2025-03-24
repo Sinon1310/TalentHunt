@@ -10,7 +10,7 @@ const TeamManagement = () => {
   const [teamData, setTeamData] = useState({
     id: id || 1, // Use the ID from URL params or default to 1
     name: "CodeCrafters",
-    competition: "Annual Hackathon 2023",
+    competition: "Annual Hackathon 2025",
     description: "We're building an AI-powered solution for sustainable urban planning. Our application will help city planners optimize resource allocation and reduce environmental impact.",
     members: [
       {
@@ -37,7 +37,7 @@ const TeamManagement = () => {
     ],
     mentor: {
       id: 1,
-      name: "Dr. James Wilson",
+      name: "Dr. Joseph",
       expertise: "AI and Machine Learning",
       department: "Computer Science"
     },
@@ -47,35 +47,35 @@ const TeamManagement = () => {
         title: "Create project proposal",
         assignedTo: "Alex Johnson",
         status: "completed",
-        dueDate: "2023-10-05"
+        dueDate: "2025-10-05"
       },
       {
         id: 2,
         title: "Design UI mockups",
         assignedTo: "Sarah Chen",
         status: "in-progress",
-        dueDate: "2023-10-10"
+        dueDate: "2025-10-10"
       },
       {
         id: 3,
         title: "Set up database schema",
         assignedTo: "Michael Brown",
         status: "in-progress",
-        dueDate: "2023-10-12"
+        dueDate: "2025-10-12"
       },
       {
         id: 4,
         title: "Implement authentication",
         assignedTo: "Michael Brown",
         status: "pending",
-        dueDate: "2023-10-15"
+        dueDate: "2025-10-15"
       },
       {
         id: 5,
         title: "Develop AI algorithm",
         assignedTo: "Team",
         status: "pending",
-        dueDate: "2023-10-20"
+        dueDate: "2025-10-20"
       }
     ],
     lookingFor: ["Data Scientist"]
