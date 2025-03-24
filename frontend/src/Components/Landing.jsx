@@ -6,6 +6,19 @@ const Landing = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate()
+
+  // Function to handle navigation to sign up
+  const handleCreateProfile = () => {
+    navigate('/auth', { state: { activeTab: 'signup' } });
+  };
+
+   // Function to handle navigation to competitions
+   const handleExploreCompetitions = () => {
+    navigate('/competitions');
+    // If you want to navigate to a specific competition:
+    // navigate('/competition/1'); // where 1 is the competition ID
+  };
+
   // Sample competitions data
   const competitions = [
     {
@@ -123,20 +136,35 @@ const Landing = () => {
         )}
       </header>
 
-      {/* Hero Section */}
-      <section id="home" className="relative bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-        <div className="absolute inset-0 bg-black opacity-30"></div>
-        <div className="container mx-auto px-4 py-20 md:py-32 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Find the Right Team. Win the Challenge.</h1>
-            <p className="text-xl md:text-2xl mb-8">Connect with the perfect teammates, get expert mentorship, and track your progress all in one place.</p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <button className="px-6 py-3 bg-white text-blue-600 rounded-md font-medium hover:bg-gray-100 transition">Create Your Profile</button>
-              <button className="px-6 py-3 bg-transparent border-2 border-white text-white rounded-md font-medium hover:bg-white hover:text-blue-600 transition">Explore Competitions</button>
-            </div>
-          </div>
-        </div>
-      </section>
+     {/* Hero section */}
+<section className="relative min-h-[80vh] flex items-center bg-gradient-to-r from-blue-600 to-purple-600">
+  <div className="container mx-auto px-4 py-20 text-center text-white relative z-10">
+    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+      Find the Right Team. <br className="hidden md:block" />
+      Win the Challenge.
+    </h1>
+    <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto opacity-90">
+      Connect with the perfect teammates, get expert mentorship, and track
+      your progress all in one place.
+    </p>
+    <div className="flex flex-col sm:flex-row gap-6 justify-center">
+      <button
+        onClick={handleCreateProfile}
+        className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-lg font-semibold text-lg transition-colors shadow-lg hover:shadow-xl"
+      >
+        Create Your Profile
+      </button>
+      <button
+        onClick={handleExploreCompetitions}
+        className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-4 rounded-lg font-semibold text-lg transition-colors"
+      >
+        Explore Competitions
+      </button>
+    </div>
+  </div>
+  {/* Optional: Add a subtle pattern overlay */}
+  <div className="absolute inset-0 bg-black opacity-10 pattern-grid"></div>
+</section>
 
       {/* How It Works Section */}
       <section id="how-it-works" className="py-16 bg-white">
