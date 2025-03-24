@@ -17,7 +17,23 @@ const AuthPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
+  //sending data to backend using post and axios
+  const send_data = async (e) => {
+    e.preventDefault();
+    
+    const student_email = signupForm.email;
+    const student_password = signupForm.password;
 
+    try {
+        const response = await axios.post('http://localhost:5002/student_api/signup', { 
+            student_email, 
+            student_password 
+        });
+        console.log('Server Response:', response.data);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
