@@ -1,0 +1,5 @@
+<img 
+  src="/images/avatar.svg" // Path to SVG in the public folder
+  alt="User Avatar"
+  className="w-12 h-12"
+/>
