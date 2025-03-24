@@ -260,9 +260,7 @@ const Landing = () => {
         <p className="text-gray-600 mb-3">{competition.description}</p>
         <div className="flex justify-between items-center">
           <span className="text-sm text-blue-600 font-medium">{competition.date}</span>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
-            Learn More
-          </button>
+         
         </div>
       </div>
     </div>
