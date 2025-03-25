@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { User, Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle } from 'lucide-react';
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -17,27 +17,7 @@ const AuthPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
-  
-  //sending data to backend using post and axios
-  const send_data = async (e) => {
-    e.preventDefault();
-    const student_email = signupForm.email;
-    const student_name = signupForm.name;
-    const student_password = signupForm.password;
-    const role = signupForm.role;
 
-    try {
-        const response = await axios.post('http://localhost:5002/student_api/signup', { 
-          student_name,  
-          student_email, 
-          student_password, 
-          role
-        });
-        console.log('Server Response:', response.data);
-    } catch (error) {
-        console.error('Error:', error);
-    }
-};
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -45,7 +25,6 @@ const AuthPage = () => {
       [name]: value
     });
     
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -124,271 +103,215 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 relative">
-        {/* Background Elements */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse-slow"></div>
-          <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-accent-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse-slow"></div>
-        </div>
-        
-        <div className="card p-8 border border-gray-100 animate-fade-in">
-          {/* Logo */}
-          <div className="flex justify-center mb-6">
-            <div className="h-12 w-12 rounded-lg bg-gradient-to-r from-primary-600 to-accent-600 flex items-center justify-center text-white font-bold text-xl">
-              TM
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-white shadow-2xl rounded-2xl overflow-hidden transform transition-all duration-300 hover:scale-105">
+          {/* Animated Background Gradient */}
+          <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 opacity-10 pointer-events-none"></div>
+          
+          {/* Logo and Title */}
+          <div className="px-8 pt-8 pb-4 text-center">
+            <div className="mx-auto w-16 h-16 mb-4 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
+              <span className="text-white text-2xl font-bold">TH</span>
             </div>
+            <h2 className="text-3xl font-extrabold text-gray-900">
+              {activeTab === 'login' ? 'Welcome Back' : 'Create Account'}
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">
+              {activeTab === 'login' 
+                ? 'Sign in to continue to your account' 
+                : 'Join our community today'}
+            </p>
           </div>
-          
-          <h2 className="text-center text-2xl font-bold text-gray-800 mb-6">
-            {activeTab === 'login' ? 'Sign in to your account' : 'Create a new account'}
-          </h2>
-          
-          {/* Success Messages */}
-          {loginSuccess && (
-            <div className="mb-4 p-3 bg-green-100 text-green-800 rounded-md flex items-center animate-fade-in">
-              <CheckCircle size={18} className="mr-2" />
-              Login successful! Redirecting...
-            </div>
-          )}
-          
-          {signupSuccess && (
-            <div className="mb-4 p-3 bg-green-100 text-green-800 rounded-md flex items-center animate-fade-in">
-              <CheckCircle size={18} className="mr-2" />
-              Account created successfully! Redirecting...
-            </div>
-          )}
-          
+
           {/* Tabs */}
-          <div className="flex border-b border-gray-200 mb-6">
+          <div className="flex border-b border-gray-200 px-8">
             <button
-              className={`flex-1 py-3 font-medium text-sm border-b-2 transition-colors ${
+              className={`flex-1 py-3 text-center font-semibold transition-colors ${
                 activeTab === 'login' 
-                  ? 'border-primary-600 text-primary-600' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  ? 'text-indigo-600 border-b-2 border-indigo-600' 
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
               onClick={() => setActiveTab('login')}
             >
               Login
             </button>
             <button
-              className={`flex-1 py-3 font-medium text-sm border-b-2 transition-colors ${
+              className={`flex-1 py-3 text-center font-semibold transition-colors ${
                 activeTab === 'signup' 
-                  ? 'border-primary-600 text-primary-600' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  ? 'text-indigo-600 border-b-2 border-indigo-600' 
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
               onClick={() => setActiveTab('signup')}
             >
               Sign Up
             </button>
           </div>
-          
-          <form onSubmit={handleSubmit}>
-            {/* Signup Fields */}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="px-8 pt-6 pb-8">
+            {/* Success Messages */}
+            {(loginSuccess || signupSuccess) && (
+              <div className="mb-4 p-3 bg-green-100 text-green-800 rounded-lg flex items-center animate-bounce">
+                <CheckCircle size={20} className="mr-2" />
+                {loginSuccess ? 'Login successful!' : 'Account created successfully!'}
+              </div>
+            )}
+
+            {/* Dynamic Form Fields */}
             {activeTab === 'signup' && (
               <div className="mb-4">
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name
-                </label>
+                <label className="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User size={18} className="text-gray-400" />
-                  </div>
                   <input
-                    id="name"
                     name="name"
                     type="text"
                     value={formData.name}
                     onChange={handleChange}
-                    className={`input-field pl-10 ${errors.name ? 'border-red-500 focus:ring-red-500' : ''}`}
-                    placeholder="John Doe"
+                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                      errors.name 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-gray-300 focus:ring-indigo-500'
+                    }`}
+                    placeholder="Enter your full name"
                   />
+                  {errors.name && (
+                    <p className="text-red-500 text-xs italic mt-1">{errors.name}</p>
+                  )}
                 </div>
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-600 flex items-center">
-                    <AlertCircle size={14} className="mr-1" />
-                    {errors.name}
-                  </p>
-                )}
               </div>
             )}
-            
-            {/* Email Field */}
+
+            {/* Email Input */}
             <div className="mb-4">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail size={18} className="text-gray-400" />
-                </div>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={`input-field pl-10 ${errors.email ? 'border-red-500 focus:ring-red-500' : ''}`}
-                  placeholder="you@gmail.com"
-                />
-              </div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
+              <input
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                  errors.email 
+                    ? 'border-red-500 focus:ring-red-500' 
+                    : 'border-gray-300 focus:ring-indigo-500'
+                }`}
+                placeholder="Email"
+              />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600 flex items-center">
-                  <AlertCircle size={14} className="mr-1" />
-                  {errors.email}
-                </p>
+                <p className="text-red-500 text-xs italic mt-1">{errors.email}</p>
               )}
             </div>
-            
-            {/* Password Field */}
+
+            {/* Password Input */}
             <div className="mb-4">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                Password
-              </label>
+              <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock size={18} className="text-gray-400" />
-                </div>
                 <input
-                  id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={handleChange}
-                  className={`input-field pl-10 pr-10 ${errors.password ? 'border-red-500 focus:ring-red-500' : ''}`}
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 pr-10 ${
+                    errors.password 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:ring-indigo-500'
+                  }`}
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  className="absolute inset-y-0 right-0 px-3 flex items-center"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? (
-                    <EyeOff size={18} className="text-gray-400 hover:text-gray-600" />
-                  ) : (
-                    <Eye size={18} className="text-gray-400 hover:text-gray-600" />
-                  )}
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600 flex items-center">
-                  <AlertCircle size={14} className="mr-1" />
-                  {errors.password}
-                </p>
+                <p className="text-red-500 text-xs italic mt-1">{errors.password}</p>
               )}
             </div>
-            
-            {/* Confirm Password Field (Signup only) */}
+
+            {/* Confirm Password for Signup */}
             {activeTab === 'signup' && (
               <div className="mb-4">
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock size={18} className="text-gray-400" />
-                  </div>
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type={showPassword ? "text" : "password"}
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    className={`input-field pl-10 ${errors.confirmPassword ? 'border-red-500 focus:ring-red-500' : ''}`}
-                    placeholder="••••••••"
-                  />
-                </div>
+                <label className="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
+                <input
+                  name="confirmPassword"
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                    errors.confirmPassword 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:ring-indigo-500'
+                  }`}
+                  placeholder="Confirm your password"
+                />
                 {errors.confirmPassword && (
-                  <p className="mt-1 text-sm text-red-600 flex items-center">
-                    <AlertCircle size={14} className="mr-1" />
-                    {errors.confirmPassword}
-                  </p>
+                  <p className="text-red-500 text-xs italic mt-1">{errors.confirmPassword}</p>
                 )}
               </div>
             )}
-            
-            {/* Role Selection (Signup only) */}
+
+            {/* Role Selection for Signup */}
             {activeTab === 'signup' && (
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  I am a:
-                </label>
+              <div className="mb-4">
                 <div className="flex space-x-4">
-                  <label className="flex items-center">
+                  <label className="inline-flex items-center">
                     <input
                       type="radio"
                       name="role"
                       value="student"
                       checked={formData.role === 'student'}
                       onChange={handleChange}
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300"
+                      className="form-radio text-indigo-600"
                     />
-                    <span className="ml-2 text-gray-700">Student</span>
+                    <span className="ml-2">Student</span>
                   </label>
-                  <label className="flex items-center">
+                  <label className="inline-flex items-center">
                     <input
                       type="radio"
                       name="role"
                       value="mentor"
                       checked={formData.role === 'mentor'}
                       onChange={handleChange}
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300"
+                      className="form-radio text-indigo-600"
                     />
-                    <span className="ml-2 text-gray-700">Mentor</span>
+                    <span className="ml-2">Mentor</span>
                   </label>
                 </div>
               </div>
             )}
-            
-            {/* Remember Me & Forgot Password (Login only) */}
-            {activeTab === 'login' && (
-              <div className="flex items-center justify-between mb-6">
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                  />
-                  <span className="ml-2 text-sm text-gray-600">Remember me</span>
-                </label>
-                <a href="#" className="text-sm text-primary-600 hover:text-primary-700">
-                  Forgot password?
-                </a>
-              </div>
-            )}
-            
+
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isSubmitting || loginSuccess || signupSuccess}
-              className="btn-primary w-full flex items-center justify-center"
+              disabled={isSubmitting}
+              className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 flex items-center justify-center"
             >
               {isSubmitting ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  {activeTab === 'login' ? 'Signing in...' : 'Creating account...'}
-                </>
+                <div className="animate-pulse">
+                  {activeTab === 'login' ? 'Signing In...' : 'Creating Account...'}
+                </div>
               ) : (
                 <>
-                  {activeTab === 'login' ? 'Sign in' : 'Create account'}
-                  <ArrowRight size={18} className="ml-2" />
+                  {activeTab === 'login' ? 'Sign In' : 'Create Account'}
+                  <ArrowRight className="ml-2" />
                 </>
               )}
             </button>
           </form>
-          
-          {/* Footer */}
-          <div className="mt-6 text-center text-sm text-gray-600">
+
+          {/* Switch Between Login/Signup */}
+          <div className="px-8 pb-6 text-center text-sm">
             {activeTab === 'login' ? (
               <>
                 Don't have an account?{' '}
                 <button 
                   onClick={() => setActiveTab('signup')}
-                  className="text-primary-600 hover:text-primary-700 font-medium"
+                  className="text-indigo-600 hover:text-indigo-800 font-semibold"
                 >
-                  Sign up
+                  Sign Up
                 </button>
               </>
             ) : (
@@ -396,19 +319,13 @@ const AuthPage = () => {
                 Already have an account?{' '}
                 <button 
                   onClick={() => setActiveTab('login')}
-                  className="text-primary-600 hover:text-primary-700 font-medium"
+                  className="text-indigo-600 hover:text-indigo-800 font-semibold"
                 >
-                  Log in 
+                  Log In
                 </button>
               </>
             )}
           </div>
-        </div>
-        
-        <div className="text-center mt-4">
-          <Link to="/" className="text-sm text-gray-600 hover:text-gray-800">
-            ← Back to Home
-          </Link>
         </div>
       </div>
     </div>

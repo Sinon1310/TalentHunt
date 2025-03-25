@@ -25,21 +25,21 @@ const Landing = () => {
       id: 1,
       title: "Annual Hackathon 2025",
       description: "Build innovative solutions for real-world problems in 48 hours.",
-      image: "https://tse3.mm.bing.net/th?id=OIP.R2D8fuAHWweBspHKgU2eLAHaEK&pid=Api&P=0&h=180?height=300&width=300",
+      image: "https://midpenpost.org/wp-content/uploads/2023/04/IMG_3168.jpg",
       date: "Oct 15-17, 2025"
     },
     {
       id: 2,
       title: "Design Challenge",
       description: "Create user-centered designs for next-gen applications.",
-      image: "/images/DesignContest.jpg?height=250&width=1200",
+      image: "https://interiordesign.net/wp-content/uploads/2023/02/Interior-Design-ThinkLab-Design-Hackathon-TL23_Editorial_Image_Cover.jpg",
       date: "Nov 5-7, 2025"
     },
     {
       id: 3,
       title: "AI Innovation Contest",
       description: "Develop AI solutions that can transform industries.",
-      image: "/images/ai.jpg?height=250&width=1200",
+      image: "https://framerusercontent.com/assets/8zE1cw2uW0PtSANxYynp9aKnnP8.png",
       date: "Dec 10-12, 2025"
     }
   ];
@@ -48,7 +48,7 @@ const Landing = () => {
   const testimonials = [
     {
       id: 1,
-      name: "Sinon Rodrigues",
+      name: "Joe Rogan",
       role: "Computer Science Student",
       quote: "This platform helped me find teammates with complementary skills. We won our first hackathon together!",
       avatar: "/images/demopic.jpg?"
@@ -92,7 +92,11 @@ const Landing = () => {
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center">
             <button onClick={()=>navigate('/profile')}>
-            <div className="text-2xl font-bold text-blue-600">TalentHunt</div>
+              <div className='flex items-center justify-center gap-2'>
+              <img className='w-15 h-15' src="http://talenthuntindia.in/assets/images/talenthunt.png" alt="" />
+              <div className="text-2xl font-extrabold text-blue-600">TalentHunt</div>
+              </div>
+            
 
             </button>
           </div>
