@@ -134,7 +134,7 @@ const AdminDashboard = () => {
       {/* Sidebar */}
       <div className="w-64 bg-indigo-800 text-white min-h-screen flex-shrink-0">
         <div className="p-4 border-b border-indigo-700">
-          <h1 className="text-xl font-bold">TeamMatch Admin</h1>
+          <h1 className="text-xl font-bold">TalentHunt Admin</h1>
           <p className="text-sm text-indigo-200 mt-1">Logged in as {adminUser.name}</p>
         </div>
         <nav className="p-4">
