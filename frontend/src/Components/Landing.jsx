@@ -92,7 +92,7 @@ const Landing = () => {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center">
             <button 
-              onClick={()=>navigate('/profile')}
+             // onClick={()=>navigate('/profile')}
               className="group flex items-center space-x-3 hover:opacity-80 transition-opacity"
             >
               <div className="relative">
