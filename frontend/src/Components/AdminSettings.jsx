@@ -14,7 +14,7 @@ const AdminSettings = () => {
     confirmPassword: "",
   })
   const [siteSettings, setSiteSettings] = useState({
-    siteName: "TeamMatch",
+    siteName: "TalentHunt",
     siteDescription: "Platform for team formation and competition management",
     allowRegistration: true,
     requireEmailVerification: true,

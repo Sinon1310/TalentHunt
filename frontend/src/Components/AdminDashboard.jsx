@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../Contexts/AdminAuthContext';
 import AdminCompetitions from './AdminCompetitions';
+import AdminTeams from './AdminTeams';
+import AdminSettings from './AdminSettings';
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { adminUser, logout } = useAdminAuth();
@@ -238,17 +240,19 @@ const AdminDashboard = () => {
 
         {/* Header */}
         <header className="bg-white shadow-sm">
-          <div className="px-6 py-4">
-            <h1 className="text-2xl font-bold text-gray-800">
-              {activeTab === 'overview' && 'Admin Dashboard'}
-              {activeTab === 'competitions' && <AdminCompetitions />}
-              {activeTab === 'users' && 'User Management'}
-              {activeTab === 'competitions' && 'Competition Management'}
-              {activeTab === 'teams' && 'Team Management'}
-              {activeTab === 'settings' && 'Admin Settings'}
-            </h1>
-          </div>
-        </header>
+  <div className="px-6 py-4">
+    <h1 className="text-2xl font-bold text-gray-800">
+      {activeTab === 'overview' && 'Admin Dashboard'}
+      {activeTab === 'users' && 'User Management'}
+      {activeTab === 'competitions' && 'Competition Management'}
+     
+{activeTab === 'competitions' && <AdminCompetitions />}
+      {activeTab === 'teams' && 'Team Management'}
+      {activeTab === 'settings' && 'Admin Settings'}
+      {activeTab === 'settings' && <AdminSettings />}
+    </h1>
+  </div>
+</header>
 
         {/* Dashboard Overview */}
         {activeTab === 'overview' && (
@@ -601,6 +605,12 @@ const AdminDashboard = () => {
             </div>
           </div>
         )}
+
+
+{/* Teams Management */}
+{activeTab === 'teams' && <AdminTeams />}
+
+
 
         {/* Delete Confirmation Modal */}
         {showDeleteModal && (
