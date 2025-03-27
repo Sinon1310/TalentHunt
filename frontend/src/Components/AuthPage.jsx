@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { User, Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle } from 'lucide-react';
 
 const AuthPage = () => {
+  
+  
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('login');
   const [showPassword, setShowPassword] = useState(false);
@@ -68,18 +70,29 @@ const AuthPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (validateForm()) {
       setIsSubmitting(true);
       
+      
       // Simulate API call
       setTimeout(() => {
         setIsSubmitting(false);
+
         
         if (activeTab === 'login') {
           setLoginSuccess(true);
+          const userData = { name: formData.name, email: formData.email, password: formData.password, role: formData.role };
+    try {
+      const response =  axios.post("http://localhost:5002/register", userData);
+      console.log("Registration Successful:", response.data);
+      alert("Registration successful!");
+    } catch (error) {
+      console.error("Error during registration:", error);
+      alert("Registration failed!");
+    }
           // Redirect based on role after successful login
           setTimeout(() => {
             if (formData.role === 'mentor') {
@@ -289,17 +302,12 @@ const AuthPage = () => {
               type="submit"
               disabled={isSubmitting}
               className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 flex items-center justify-center"
+              onClick={handleSubmit}
             >
-              {isSubmitting ? (
-                <div className="animate-pulse">
-                  {activeTab === 'login' ? 'Signing In...' : 'Creating Account...'}
-                </div>
-              ) : (
-                <>
-                  {activeTab === 'login' ? 'Sign In' : 'Create Account'}
-                  <ArrowRight className="ml-2" />
-                </>
-              )}
+            <label className="block text-gray-700 text-sm font-bold mb-2">submit</label>
+            
+            
+        
             </button>
           </form>
 
