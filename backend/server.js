@@ -2,7 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
-
+const User = require("./models/users");
+// const connectDB = require("./connectiondb");
 
 const app = express();
 app.use(cors());
@@ -10,33 +11,26 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5002;
 
- //Connect to MongoDB Atlas
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("MongoDB Connected"))
-   .catch(err => console.log(err));
-   
-
-// Basic Route
-app.get("/", (req, res) => {
-    res.send("API is running...");
-});
-
-app.post('/student_api/signup', async (req, res) => {
-    const { student_name,student_email, student_password ,role} = req.body;
-
-    if (!student_email || !student_password) {
-        return res.status(400).json({ error: "Missing email or password" });
-    }
-
+ const connectDB = async () => {
     try {
-        //const newStudent = new Student({ email: student_email, password: student_password });
-        //await newStudent.save();
-        res.status(201).json({ message: "Student registered successfully" });
-        console.log(student_email+" "+student_password+" "+role+" "+student_name);
+      await mongoose.connect(process.env.MONGO_URI);
+      console.log("MongoDB Connected Successfully!");
     } catch (error) {
-        console.error("Error saving student:", error);
-        res.status(500).json({ error: "Failed to register student" });
+      console.error("MongoDB Connection Error:", error);
+      process.exit(1); // Exit process if connection fails
+    }
+  };
+
+  connectDB();
+   
+app.post("/register", async (req, res) => {
+    const { name, email, password,role } = req.body;
+    try {
+        const user = new User({ name, email, password,role });
+        await user.save();
+        res.status(201).json({ message: "User registered successfully" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
-
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

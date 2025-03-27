@@ -13,6 +13,7 @@ const AuthPage = () => {
     confirmPassword: '',
     role: 'student'
   });
+    
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
@@ -313,6 +314,7 @@ const AuthPage = () => {
                 >
                   Sign Up
                 </button>
+                
               </>
             ) : (
               <>
