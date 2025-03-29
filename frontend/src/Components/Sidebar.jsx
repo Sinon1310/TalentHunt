@@ -21,7 +21,7 @@ const Sidebar = () => {
       label: "Competitions"
     },
     {
-      path: "/team/1",
+      path: "/manage-team/101",
       icon: <Users size={20} />,
       label: "My Teams"
     },
