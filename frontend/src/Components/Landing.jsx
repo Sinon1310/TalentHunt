@@ -15,9 +15,7 @@ const Landing = () => {
    // Function to handle navigation to competitions
    const handleExploreCompetitions = () => {
     navigate('/competitions');
-    // If you want to navigate to a specific competition:
-    // navigate('/competition/1'); // where 1 is the competition ID
-  };
+   };
 
   // Sample competitions data
   const competitions = [
@@ -311,9 +309,9 @@ const Landing = () => {
                         <p className="text-gray-600 mb-6 leading-relaxed">{competition.description}</p>
                         <div className="flex justify-between items-center">
                           <span className="text-blue-600 font-medium">{competition.date}</span>
-                          <button className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                          {/* <button className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                             Learn More
-                          </button>
+                          </button> */}
                         </div>
                       </div>
                     </div>
@@ -350,7 +348,10 @@ const Landing = () => {
           </div>
           
           <div className="text-center mt-12">
-            <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium text-lg hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <button 
+              onClick={handleExploreCompetitions}
+              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium text-lg hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+            >
               View All Competitions
             </button>
           </div>
@@ -383,18 +384,47 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Join the Challenge?</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">Create your profile today and start connecting with the perfect teammates for your next competition.</p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button className="px-6 py-3 bg-white text-blue-600 rounded-md font-medium hover:bg-gray-100 transition">
-              Create Your Profile
-            </button>
-            <button className="px-6 py-3 bg-transparent border-2 border-white text-white rounded-md font-medium hover:bg-white hover:text-blue-600 transition">
-              Explore Competitions
-            </button>
+      {/* Clean Call to Action */}
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600"></div>
+        
+        {/* Animated Background Circles */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-white opacity-5 rounded-full"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white opacity-5 rounded-full"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative">
+          <div className="max-w-4xl mx-auto text-center">
+            <Link 
+              to="/auth" 
+              className="group inline-block text-center hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="text-white space-y-4">
+                <h2 className="text-4xl font-light mb-2">
+                  Ready to start your journey?
+                </h2>
+                <p className="text-white/80 text-lg font-light">
+                  Join our community of innovators today
+                </p>
+                <div className="flex items-center justify-center gap-2 text-white/90 mt-6 group-hover:text-white">
+                  <span className="text-sm uppercase tracking-wider">Get Started</span>
+                  <svg 
+                    className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth="2" 
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
       </section>

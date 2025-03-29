@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle } from 'lucide-react';
+import { useUser } from '../Contexts/UserContext';
 
 const AuthPage = () => {
   
   
   const navigate = useNavigate();
+  const { login } = useUser();
   const [activeTab, setActiveTab] = useState('login');
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -76,23 +78,24 @@ const AuthPage = () => {
     if (validateForm()) {
       setIsSubmitting(true);
       
-      
       // Simulate API call
       setTimeout(() => {
         setIsSubmitting(false);
-
         
+        const userData = {
+          name: activeTab === 'login' 
+            ? formData.email.split('@')[0] // Extract name from email for login
+            : formData.name, // Use provided name for signup
+          email: formData.email,
+          role: formData.role,
+          profileImage: null,
+          joinedDate: new Date().toISOString()
+        };
+
         if (activeTab === 'login') {
           setLoginSuccess(true);
-          const userData = { name: formData.name, email: formData.email, password: formData.password, role: formData.role };
-    try {
-      const response =  axios.post("http://localhost:5002/register", userData);
-      console.log("Registration Successful:", response.data);
-      alert("Registration successful!");
-    } catch (error) {
-      console.error("Error during registration:", error);
-      alert("Registration failed!");
-    }
+          login(userData);
+          
           // Redirect based on role after successful login
           setTimeout(() => {
             if (formData.role === 'mentor') {
@@ -103,6 +106,8 @@ const AuthPage = () => {
           }, 1500);
         } else {
           setSignupSuccess(true);
+          login(userData);
+          
           // Redirect to dashboard after successful signup
           setTimeout(() => {
             if (formData.role === 'mentor') {
@@ -245,6 +250,34 @@ const AuthPage = () => {
               )}
             </div>
 
+            {/* Role Selection - Show for both login and signup */}
+            <div className="mb-4">
+              <div className="flex space-x-4">
+                <label className="inline-flex items-center">
+                  <input
+                    type="radio"
+                    name="role"
+                    value="student"
+                    checked={formData.role === 'student'}
+                    onChange={handleChange}
+                    className="form-radio text-indigo-600"
+                  />
+                  <span className="ml-2">Student</span>
+                </label>
+                <label className="inline-flex items-center">
+                  <input
+                    type="radio"
+                    name="role"
+                    value="mentor"
+                    checked={formData.role === 'mentor'}
+                    onChange={handleChange}
+                    className="form-radio text-indigo-600"
+                  />
+                  <span className="ml-2">Mentor</span>
+                </label>
+              </div>
+            </div>
+
             {/* Confirm Password for Signup */}
             {activeTab === 'signup' && (
               <div className="mb-4">
@@ -267,47 +300,23 @@ const AuthPage = () => {
               </div>
             )}
 
-            {/* Role Selection for Signup */}
-            {activeTab === 'signup' && (
-              <div className="mb-4">
-                <div className="flex space-x-4">
-                  <label className="inline-flex items-center">
-                    <input
-                      type="radio"
-                      name="role"
-                      value="student"
-                      checked={formData.role === 'student'}
-                      onChange={handleChange}
-                      className="form-radio text-indigo-600"
-                    />
-                    <span className="ml-2">Student</span>
-                  </label>
-                  <label className="inline-flex items-center">
-                    <input
-                      type="radio"
-                      name="role"
-                      value="mentor"
-                      checked={formData.role === 'mentor'}
-                      onChange={handleChange}
-                      className="form-radio text-indigo-600"
-                    />
-                    <span className="ml-2">Mentor</span>
-                  </label>
-                </div>
-              </div>
-            )}
-
             {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
               className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 flex items-center justify-center"
-              onClick={handleSubmit}
             >
-            <label className="block text-gray-700 text-sm font-bold mb-2">submit</label>
-            
-            
-        
+              {isSubmitting ? (
+                <div className="flex items-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Processing...
+                </div>
+              ) : (
+                activeTab === 'login' ? 'Sign In' : 'Create Account'
+              )}
             </button>
           </form>
 

@@ -1,50 +1,169 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Users, Calendar, Clock, MapPin, Award, User, FileText, ChevronLeft, MessageSquare, Share2 } from 'lucide-react';
+import { Users, Calendar, Clock, MapPin, Award, User, FileText, ChevronLeft, MessageSquare, Share2, CheckCircle } from 'lucide-react';
 
 const CompetitionDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate(); // Use navigate instead of window.location.href
   const [activeTab, setActiveTab] = useState('overview');
   
-  // Sample data - in a real app, this would be fetched from an API based on the ID
-  const competition = {
-    id: id,
-    name: "Annual Hackathon 2025",
-    description: "Build innovative solutions for real-world problems in 48 hours. This hackathon focuses on creating technology that addresses sustainability challenges.",
-    date: "October 15-17, 2025",
-    time: "9:00 AM - 5:00 PM",
-    location: "University Main Campus, Building A",
-    registrationDeadline: "October 10, 2025",
-    prizes: [
-      "1st Place: $5,000",
-      "2nd Place: $2,500",
-      "3rd Place: $1,000",
-      "Best UI/UX: $500",
-      "Most Innovative: $500"
+  // Sample teams data
+  const teamsData = {
+    1: [ // Teams for Annual Hackathon
+      {
+        id: 101,
+        name: "CodeCrafters",
+        members: 3,
+        maxMembers: 4,
+        lookingForMembers: true,
+        memberInitials: ["A", "B", "C"]
+      },
+      {
+        id: 102,
+        name: "TechTitans",
+        members: 3,
+        maxMembers: 4,
+        lookingForMembers: true,
+        memberInitials: ["D", "E", "F"]
+      },
+      {
+        id: 103,
+        name: "ByteBusters",
+        members: 3,
+        maxMembers: 4,
+        lookingForMembers: true,
+        memberInitials: ["G", "H", "I"]
+      },
+      {
+        id: 104,
+        name: "DataDynamos",
+        members: 3,
+        maxMembers: 4,
+        lookingForMembers: true,
+        memberInitials: ["J", "K", "L"]
+      }
     ],
-    requirements: [
-      "Teams of 2-4 students",
-      "At least one team member must have programming experience",
-      "All team members must be currently enrolled students",
-      "Projects must be started during the hackathon (no pre-built projects)"
-    ],
-    timeline: [
-      { date: "October 15, 9:00 AM", event: "Opening Ceremony" },
-      { date: "October 15, 10:00 AM", event: "Hacking Begins" },
-      { date: "October 16, 2:00 PM", event: "Midway Check-in" },
-      { date: "October 17, 10:00 AM", event: "Hacking Ends" },
-      { date: "October 17, 1:00 PM", event: "Project Presentations" },
-      { date: "October 17, 4:00 PM", event: "Awards Ceremony" }
-    ],
-    organizers: [
-      { name: "Dr. Sarah Chen", role: "Faculty Advisor" },
-      { name: "Tech Innovation Club", role: "Student Organization" }
-    ],
-    registeredTeams: 12,
-    maxTeams: 20,
-    isRegistered: false
+    2: [ // Teams for Design Challenge
+      {
+        id: 201,
+        name: "DesignDreamers",
+        members: 3,
+        maxMembers: 4,
+        lookingForMembers: true,
+        memberInitials: ["M", "N", "O"]
+      },
+      {
+        id: 202,
+        name: "UXUnicorns",
+        members: 3,
+        maxMembers: 4,
+        lookingForMembers: true,
+        memberInitials: ["P", "Q", "R"]
+      },
+      {
+        id: 203,
+        name: "PixelPioneers",
+        members: 3,
+        maxMembers: 4,
+        lookingForMembers: true,
+        memberInitials: ["S", "T", "U"]
+      },
+      {
+        id: 204,
+        name: "CreativeCore",
+        members: 3,
+        maxMembers: 4,
+        lookingForMembers: true,
+        memberInitials: ["V", "W", "X"]
+      }
+    ]
   };
+
+  // Sample competition data based on ID
+  const competitions = {
+    1: {
+      id: 1,
+      name: "Annual Hackathon 2025",
+      description: "Build innovative solutions for real-world problems in 48 hours. This hackathon focuses on creating technology that addresses sustainability challenges.",
+      date: "October 15-17, 2025",
+      time: "9:00 AM - 5:00 PM",
+      location: "University Main Campus, Building A",
+      registrationDeadline: "October 10, 2025",
+      prizes: [
+        "1st Place: $5,000",
+        "2nd Place: $2,500",
+        "3rd Place: $1,000",
+        "Best UI/UX: $500",
+        "Most Innovative: $500"
+      ],
+      requirements: [
+        "Teams of 2-4 students",
+        "At least one team member must have programming experience",
+        "All team members must be currently enrolled students",
+        "Projects must be started during the hackathon (no pre-built projects)"
+      ],
+      timeline: [
+        { date: "October 15, 9:00 AM", event: "Opening Ceremony" },
+        { date: "October 15, 10:00 AM", event: "Hacking Begins" },
+        { date: "October 16, 2:00 PM", event: "Midway Check-in" },
+        { date: "October 17, 10:00 AM", event: "Hacking Ends" },
+        { date: "October 17, 1:00 PM", event: "Project Presentations" },
+        { date: "October 17, 4:00 PM", event: "Awards Ceremony" }
+      ],
+      organizers: [
+        { name: "Dr. Sarah Chen", role: "Faculty Advisor" },
+        { name: "Tech Innovation Club", role: "Student Organization" }
+      ],
+      registeredTeams: 12,
+      maxTeams: 20,
+      isRegistered: true
+    },
+    2: {
+      id: 2,
+      name: "Design Challenge",
+      description: "Create innovative and user-centered designs for next-generation applications. This challenge focuses on solving real-world UX problems with creative solutions.",
+      date: "November 5-7, 2025",
+      time: "9:00 AM - 6:00 PM",
+      location: "Design Innovation Center, Building B",
+      registrationDeadline: "November 1, 2025",
+      prizes: [
+        "1st Place: $3,000",
+        "2nd Place: $1,500",
+        "3rd Place: $750",
+        "Best Innovation: $500",
+        "People's Choice: $500"
+      ],
+      requirements: [
+        "Teams of 2-4 designers/developers",
+        "At least one UI/UX designer per team",
+        "All team members must be currently enrolled students",
+        "Designs must be original and created during the challenge"
+      ],
+      timeline: [
+        { date: "November 5, 9:00 AM", event: "Opening & Brief" },
+        { date: "November 5, 10:00 AM", event: "Design Sprint Begins" },
+        { date: "November 6, 2:00 PM", event: "Design Review" },
+        { date: "November 7, 10:00 AM", event: "Final Touches" },
+        { date: "November 7, 2:00 PM", event: "Presentations" },
+        { date: "November 7, 5:00 PM", event: "Awards" }
+      ],
+      organizers: [
+        { name: "Prof. Emily Wong", role: "Design Lead" },
+        { name: "Design Innovation Lab", role: "Host Organization" }
+      ],
+      registeredTeams: 8,
+      maxTeams: 15,
+      isRegistered: false
+    }
+  };
+
+  // Add console logging for debugging
+  console.log('Competition ID:', id);
+  console.log('Available competitions:', Object.keys(competitions));
+  console.log('Selected competition:', competitions[id]);
+
+  const competition = competitions[id] || competitions[1];
+  const teams = teamsData[id] || [];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -81,10 +200,10 @@ const CompetitionDetails = () => {
               {/* This is the fixed button that navigates to team management */}
               <button 
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center justify-center"
-                onClick={() => navigate(`/team/1`)} // Using navigate instead of window.location.href
+                onClick={() => navigate(`/team/new/${id}`)}
               >
                 <Users size={18} className="mr-2" />
-                Join a Team
+                Create Team
               </button>
             </div>
           </div>
@@ -306,29 +425,31 @@ const CompetitionDetails = () => {
                   <h3 className="text-xl font-semibold text-gray-800">Registered Teams</h3>
                   <button 
                     className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center"
-                    onClick={() => navigate(`/team/1`)} // Using navigate instead of window.location.href
+                    onClick={() => navigate(`/team/new/${id}`)}
                   >
                     <Users size={18} className="mr-2" />
-                    Join a Team
+                    Create Team
                   </button>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[1, 2, 3, 4].map((team) => (
-                    <div key={team} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                  {teams.map((team) => (
+                    <div key={team.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h4 className="font-semibold text-gray-800">Team {team}</h4>
-                          <p className="text-sm text-gray-600">3/4 members</p>
+                          <h4 className="font-semibold text-gray-800">{team.name}</h4>
+                          <p className="text-sm text-gray-600">{team.members}/{team.maxMembers} members</p>
                         </div>
-                        <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                          Looking for Members
-                        </span>
+                        {team.lookingForMembers && (
+                          <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                            Looking for Members
+                          </span>
+                        )}
                       </div>
                       <div className="mt-3 flex -space-x-2">
-                        {[1, 2, 3].map((member) => (
-                          <div key={member} className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-medium">
-                            {String.fromCharCode(64 + member)}
+                        {team.memberInitials.map((initial, index) => (
+                          <div key={index} className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-medium">
+                            {initial}
                           </div>
                         ))}
                         <div className="w-8 h-8 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center text-blue-600 text-xs">
@@ -338,7 +459,7 @@ const CompetitionDetails = () => {
                       <div className="mt-3">
                         <button 
                           className="w-full px-3 py-1.5 border border-blue-600 text-blue-600 rounded hover:bg-blue-50 transition text-sm"
-                          onClick={() => navigate(`/team/${team}`)} // Using navigate instead of window.location.href
+                          onClick={() => navigate(`/team/${team.id}`)}
                         >
                           View Team
                         </button>
