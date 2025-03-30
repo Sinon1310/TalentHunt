@@ -13,6 +13,8 @@ const TeamManagement = () => {
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [messageContent, setMessageContent] = useState('');
   const [selectedMember, setSelectedMember] = useState(null);
+  const [showMentorModal, setShowMentorModal] = useState(false);
+  const [mentorMessage, setMentorMessage] = useState('');
   
   // Sample teams data - in a real app, this would be fetched from an API
   const teamsData = {
@@ -328,6 +330,18 @@ const TeamManagement = () => {
     setInviteRole('');
   };
 
+  const handleContactMentor = () => {
+    setShowMentorModal(true);
+  };
+
+  const handleSubmitMentorMessage = (e) => {
+    e.preventDefault();
+    // Here you would typically send the message to your backend
+    console.log(`Sending message to mentor ${teamData.mentor.name}: ${mentorMessage}`);
+    setShowMentorModal(false);
+    setMentorMessage('');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -508,7 +522,10 @@ const TeamManagement = () => {
                             </span>
                           ))}
                         </div>
-                        <button className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-sm flex items-center">
+                        <button 
+                          onClick={handleInviteMember}
+                          className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-sm flex items-center"
+                        >
                           <Plus size={16} className="mr-1" />
                           Invite Members
                         </button>
@@ -529,7 +546,10 @@ const TeamManagement = () => {
                           <h4 className="font-medium text-gray-800">{teamData.mentor.name}</h4>
                           <p className="text-sm text-gray-600">{teamData.mentor.expertise}</p>
                           <p className="text-sm text-gray-600">{teamData.mentor.department}</p>
-                          <button className="mt-3 px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition text-sm flex items-center">
+                          <button 
+                            onClick={handleContactMentor}
+                            className="mt-3 px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition text-sm flex items-center"
+                          >
                             <MessageSquare size={16} className="mr-1" />
                             Contact Mentor
                           </button>
@@ -1149,6 +1169,55 @@ const TeamManagement = () => {
                     className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                   >
                     Send Invite
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mentor Contact Modal */}
+      {showMentorModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-xl font-semibold">Contact Mentor - {teamData.mentor.name}</h2>
+                <button
+                  onClick={() => setShowMentorModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <form onSubmit={handleSubmitMentorMessage} className="p-4">
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Message
+                  </label>
+                  <textarea
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    rows="4"
+                    value={mentorMessage}
+                    onChange={(e) => setMentorMessage(e.target.value)}
+                    placeholder="Type your message to the mentor..."
+                    required
+                  />
+                </div>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                    onClick={() => setShowMentorModal(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Send Message
                   </button>
                 </div>
               </form>
