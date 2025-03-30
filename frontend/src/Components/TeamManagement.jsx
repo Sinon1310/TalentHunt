@@ -7,6 +7,12 @@ const TeamManagement = () => {
   const { id } = useParams(); // Get team ID from URL parameters
   const [activeTab, setActiveTab] = useState('overview');
   const [showChat, setShowChat] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState('');
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [messageContent, setMessageContent] = useState('');
+  const [selectedMember, setSelectedMember] = useState(null);
   
   // Sample teams data - in a real app, this would be fetched from an API
   const teamsData = {
@@ -296,13 +302,39 @@ const TeamManagement = () => {
     }
   };
 
+  const handleSendMessage = (member) => {
+    setSelectedMember(member);
+    setShowMessageModal(true);
+  };
+
+  const handleSubmitMessage = (e) => {
+    e.preventDefault();
+    // Here you would typically send the message to your backend
+    console.log(`Sending message to ${selectedMember.name}: ${messageContent}`);
+    setShowMessageModal(false);
+    setMessageContent('');
+  };
+
+  const handleInviteMember = () => {
+    setShowInviteModal(true);
+  };
+
+  const handleSubmitInvite = (e) => {
+    e.preventDefault();
+    // Here you would typically send the invite to your backend
+    console.log(`Inviting ${inviteEmail} as ${inviteRole}`);
+    setShowInviteModal(false);
+    setInviteEmail('');
+    setInviteRole('');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-3">
           <div className="flex justify-between items-center">
-            <div className="text-2xl font-bold text-blue-600">TeamMatch</div>
+            <div className="text-2xl font-bold text-blue-600">TalentHunt</div>
             
             {/* User Menu */}
             <div className="flex items-center space-x-4">
@@ -567,7 +599,10 @@ const TeamManagement = () => {
             <div>
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold text-gray-800">Team Members</h2>
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center">
+                <button 
+                  onClick={handleInviteMember}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center"
+                >
                   <Plus size={18} className="mr-2" />
                   Invite Member
                 </button>
@@ -609,7 +644,10 @@ const TeamManagement = () => {
                           
                           <div>
                             <h4 className="text-sm font-medium text-gray-700 mb-1">Contact</h4>
-                            <button className="mt-1 px-3 py-1 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition text-sm flex items-center">
+                            <button 
+                              onClick={() => handleSendMessage(member)}
+                              className="mt-1 px-3 py-1 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition text-sm flex items-center"
+                            >
                               <MessageSquare size={14} className="mr-1" />
                               Send Message
                             </button>
@@ -638,7 +676,10 @@ const TeamManagement = () => {
                         </span>
                       ))}
                     </div>
-                    <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center mx-auto">
+                    <button 
+                      onClick={handleInviteMember}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center mx-auto"
+                    >
                       <Plus size={18} className="mr-2" />
                       Invite Members
                     </button>
@@ -1001,6 +1042,120 @@ const TeamManagement = () => {
           )}
         </div>
       </main>
+
+      {/* Message Modal */}
+      {showMessageModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-xl font-semibold">Send Message to {selectedMember?.name}</h2>
+                <button
+                  onClick={() => setShowMessageModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <form onSubmit={handleSubmitMessage} className="p-4">
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Message
+                  </label>
+                  <textarea
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    rows="4"
+                    value={messageContent}
+                    onChange={(e) => setMessageContent(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                    onClick={() => setShowMessageModal(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Send Message
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Invite Member Modal */}
+      {showInviteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-xl font-semibold">Invite Team Member</h2>
+                <button
+                  onClick={() => setShowInviteModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <form onSubmit={handleSubmitInvite} className="p-4">
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    value={inviteEmail}
+                    onChange={(e) => setInviteEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Role
+                  </label>
+                  <select
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    value={inviteRole}
+                    onChange={(e) => setInviteRole(e.target.value)}
+                    required
+                  >
+                    <option value="">Select a role</option>
+                    <option value="Frontend Developer">Frontend Developer</option>
+                    <option value="Backend Developer">Backend Developer</option>
+                    <option value="UI/UX Designer">UI/UX Designer</option>
+                    <option value="Data Scientist">Data Scientist</option>
+                    <option value="ML Engineer">ML Engineer</option>
+                  </select>
+                </div>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                    onClick={() => setShowInviteModal(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Send Invite
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
