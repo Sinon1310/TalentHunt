@@ -198,13 +198,13 @@ const CompetitionDetails = () => {
               )}
               
               {/* This is the fixed button that navigates to team management */}
-              <button 
+              {/* <button 
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center justify-center"
                 onClick={() => navigate(`/team/new/${id}`)}
               >
                 <Users size={18} className="mr-2" />
                 Create Team
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
@@ -423,13 +423,13 @@ const CompetitionDetails = () => {
               <div>
                 <div className="flex justify-between items-center mb-6">
                   <h3 className="text-xl font-semibold text-gray-800">Registered Teams</h3>
-                  <button 
+                  {/* <button 
                     className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center"
                     onClick={() => navigate(`/team/new/${id}`)}
                   >
                     <Users size={18} className="mr-2" />
                     Create Team
-                  </button>
+                  </button> */}
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

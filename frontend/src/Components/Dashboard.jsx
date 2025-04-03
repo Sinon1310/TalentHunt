@@ -360,9 +360,9 @@ const Dashboard = () => {
                   <h2 className="text-lg font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
                     Team Requests
                   </h2>
-                  <Link to="/teams/requests" className="text-sm text-blue-600 hover:text-blue-700">
+                  {/* <Link to="/teams/requests" className="text-sm text-blue-600 hover:text-blue-700">
                     View All
-                  </Link>
+                  </Link> */}
                 </div>
                 
                 <div className="space-y-4">
@@ -426,9 +426,9 @@ const Dashboard = () => {
                   <h2 className="text-lg font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
                     Mentor Messages
                   </h2>
-                  <Link to="/mentorship/messages" className="text-sm text-blue-600 hover:text-blue-700">
+                  {/* <Link to="/mentorship/messages" className="text-sm text-blue-600 hover:text-blue-700">
                     View All
-                  </Link>
+                  </Link> */}
                 </div>
                 
                 <div className="space-y-4">
