@@ -76,6 +76,44 @@ const CompetitionDetails = () => {
         lookingForMembers: true,
         memberInitials: ["V", "W", "X"]
       }
+    ],
+    3: [ // Teams for AI Innovation Contest
+      {
+        id: 301,
+        name: "AI Innovators",
+        members: 3,
+        maxMembers: 4,
+        lookingForMembers: true,
+        memberInitials: ["R", "S", "T"],
+        description: "Focusing on developing cutting-edge AI solutions for healthcare"
+      },
+      {
+        id: 302,
+        name: "Neural Networks",
+        members: 2,
+        maxMembers: 4,
+        lookingForMembers: true,
+        memberInitials: ["U", "V"],
+        description: "Specializing in deep learning and computer vision"
+      },
+      {
+        id: 303,
+        name: "ML Masters",
+        members: 3,
+        maxMembers: 4,
+        lookingForMembers: true,
+        memberInitials: ["W", "X", "Y"],
+        description: "Expert team in machine learning and data analytics"
+      },
+      {
+        id: 304,
+        name: "DataMinds",
+        members: 2,
+        maxMembers: 4,
+        lookingForMembers: true,
+        memberInitials: ["Z", "A"],
+        description: "Focused on AI-driven data analysis and predictions"
+      }
     ]
   };
 
@@ -116,7 +154,7 @@ const CompetitionDetails = () => {
       ],
       registeredTeams: 12,
       maxTeams: 20,
-      isRegistered: true
+      isRegistered: false
     },
     2: {
       id: 2,
@@ -154,6 +192,43 @@ const CompetitionDetails = () => {
       registeredTeams: 8,
       maxTeams: 15,
       isRegistered: false
+    },
+    3: {
+      id: 3,
+      name: "AI Innovation Contest",
+      description: "Develop AI solutions that can transform industries. Put your machine learning skills to the test and create impactful solutions.",
+      date: "December 10-12, 2025",
+      time: "9:00 AM - 6:00 PM",
+      location: "AI Research Center, Building C",
+      registrationDeadline: "November 30, 2025",
+      prizes: [
+        "1st Place: $4,000",
+        "2nd Place: $2,000",
+        "3rd Place: $1,000",
+        "Best AI Implementation: $500",
+        "Most Innovative Solution: $500"
+      ],
+      requirements: [
+        "Teams of 2-4 members",
+        "At least one member with ML/AI experience",
+        "All team members must be currently enrolled students",
+        "Solutions must be developed during the contest"
+      ],
+      timeline: [
+        { date: "December 10, 9:00 AM", event: "Opening Ceremony" },
+        { date: "December 10, 10:00 AM", event: "Development Begins" },
+        { date: "December 11, 2:00 PM", event: "Progress Review" },
+        { date: "December 12, 10:00 AM", event: "Development Ends" },
+        { date: "December 12, 1:00 PM", event: "Project Demonstrations" },
+        { date: "December 12, 4:00 PM", event: "Awards Ceremony" }
+      ],
+      organizers: [
+        { name: "Dr. Michael Zhang", role: "AI Research Lead" },
+        { name: "AI Innovation Lab", role: "Host Organization" }
+      ],
+      registeredTeams: 5,
+      maxTeams: 15,
+      isRegistered: false
     }
   };
 
@@ -162,8 +237,32 @@ const CompetitionDetails = () => {
   console.log('Available competitions:', Object.keys(competitions));
   console.log('Selected competition:', competitions[id]);
 
-  const competition = competitions[id] || competitions[1];
+  const competition = competitions[id];
+  
+  // If competition not found, redirect to competitions page
+  useEffect(() => {
+    if (!competition) {
+      navigate('/competitions');
+    }
+  }, [competition, navigate]);
+
+  // If competition is not found, show loading or return null
+  if (!competition) {
+    return null;
+  }
+
   const teams = teamsData[id] || [];
+
+  // Function to handle team join request
+  const handleJoinTeam = (teamId) => {
+    alert('Join request sent to team!');
+    // Here you would typically make an API call to handle the join request
+  };
+
+  // Function to handle team creation
+  const handleCreateTeam = () => {
+    navigate(`/team/new/${id}`);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -196,15 +295,6 @@ const CompetitionDetails = () => {
                   Registered
                 </button>
               )}
-              
-              {/* This is the fixed button that navigates to team management */}
-              {/* <button 
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center justify-center"
-                onClick={() => navigate(`/team/new/${id}`)}
-              >
-                <Users size={18} className="mr-2" />
-                Create Team
-              </button> */}
             </div>
           </div>
         </div>
@@ -423,50 +513,67 @@ const CompetitionDetails = () => {
               <div>
                 <div className="flex justify-between items-center mb-6">
                   <h3 className="text-xl font-semibold text-gray-800">Registered Teams</h3>
-                  {/* <button 
+                  <button 
                     className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center"
-                    onClick={() => navigate(`/team/new/${id}`)}
+                    onClick={handleCreateTeam}
                   >
                     <Users size={18} className="mr-2" />
                     Create Team
-                  </button> */}
+                  </button>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {teams.map((team) => (
-                    <div key={team.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-semibold text-gray-800">{team.name}</h4>
-                          <p className="text-sm text-gray-600">{team.members}/{team.maxMembers} members</p>
-                        </div>
-                        {team.lookingForMembers && (
-                          <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                            Looking for Members
-                          </span>
-                        )}
-                      </div>
-                      <div className="mt-3 flex -space-x-2">
-                        {team.memberInitials.map((initial, index) => (
-                          <div key={index} className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-medium">
-                            {initial}
+                {teams.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-600">No teams registered yet. Be the first to create a team!</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {teams.map((team) => (
+                      <div key={team.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <h4 className="font-semibold text-gray-800 text-lg">{team.name}</h4>
+                            {team.description && (
+                              <p className="text-sm text-gray-600 mt-1">{team.description}</p>
+                            )}
                           </div>
-                        ))}
-                        <div className="w-8 h-8 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center text-blue-600 text-xs">
-                          +1
+                          {team.lookingForMembers && (
+                            <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                              Looking for Members
+                            </span>
+                          )}
+                        </div>
+                        
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center">
+                            <div className="flex -space-x-2 mr-3">
+                              {team.memberInitials.map((initial, index) => (
+                                <div 
+                                  key={index} 
+                                  className="w-8 h-8 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center text-blue-600 text-xs font-medium"
+                                >
+                                  {initial}
+                                </div>
+                              ))}
+                            </div>
+                            <span className="text-sm text-gray-600">
+                              {team.members}/{team.maxMembers} members
+                            </span>
+                          </div>
+                          
+                          {team.lookingForMembers && (
+                            <button 
+                              onClick={() => handleJoinTeam(team.id)}
+                              className="px-3 py-1.5 text-sm border border-blue-600 text-blue-600 rounded hover:bg-blue-50 transition"
+                            >
+                              Request to Join
+                            </button>
+                          )}
                         </div>
                       </div>
-                      <div className="mt-3">
-                        <button 
-                          className="w-full px-3 py-1.5 border border-blue-600 text-blue-600 rounded hover:bg-blue-50 transition text-sm"
-                          onClick={() => navigate(`/team/${team.id}`)}
-                        >
-                          View Team
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
