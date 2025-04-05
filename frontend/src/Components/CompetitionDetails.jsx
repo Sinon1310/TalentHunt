@@ -415,7 +415,7 @@ const CompetitionDetails = () => {
                 </div>
                 
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <button className="px-4 py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 transition flex items-center justify-center">
+                  {/* <button className="px-4 py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 transition flex items-center justify-center">
                     <FileText size={18} className="mr-2" />
                     Download Info Packet
                   </button>
@@ -426,7 +426,7 @@ const CompetitionDetails = () => {
                   <button className="px-4 py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 transition flex items-center justify-center">
                     <Share2 size={18} className="mr-2" />
                     Share
-                  </button>
+                  </button> */}
                 </div>
               </div>
             )}
