@@ -9,11 +9,23 @@ const AdminDashboard = () => {
   const { adminUser, logout } = useAdminAuth();
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
+  const [roleFilter, setRoleFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [newUser, setNewUser] = useState({
+    name: '',
+    email: '',
+    role: 'student',
+    status: 'active',
+    teams: '0',
+    joinDate: new Date().toISOString().split('T')[0]
+  });
 
   // Redirect if not logged in
   useEffect(() => {
@@ -31,18 +43,18 @@ const AdminDashboard = () => {
   };
 
   const users = [
-    { id: 1, name: 'Alex Johnson', email: 'alex@example.com', role: 'Student', status: 'active', teams: 1, joinDate: '2023-10-15' },
-    { id: 2, name: 'Sarah Chen', email: 'sarah@example.com', role: 'Student', status: 'active', teams: 1, joinDate: '2023-10-14' },
-    { id: 3, name: 'Michael Brown', email: 'michael@example.com', role: 'Student', status: 'active', teams: 1, joinDate: '2023-10-13' },
-    { id: 4, name: 'Emily Davis', email: 'emily@example.com', role: 'Mentor', status: 'active', teams: 0, joinDate: '2023-10-12' },
-    { id: 5, name: 'David Wilson', email: 'david@example.com', role: 'Student', status: 'active', teams: 1, joinDate: '2023-10-11' },
-    { id: 6, name: 'Jessica Taylor', email: 'jessica@example.com', role: 'Student', status: 'pending', teams: 0, joinDate: '2023-10-10' },
-    { id: 7, name: 'Ryan Martinez', email: 'ryan@example.com', role: 'Student', status: 'pending', teams: 0, joinDate: '2023-10-09' },
-    { id: 8, name: 'Dr. James Wilson', email: 'james@example.com', role: 'Mentor', status: 'active', teams: 0, joinDate: '2023-10-08' }
+    { id: 1, name: 'Rahul Sharma', email: 'rahul.s@example.com', role: 'student', status: 'active', teams: 1, joinDate: '2023-10-15' },
+    { id: 2, name: 'Priya Patel', email: 'priya.p@example.com', role: 'student', status: 'active', teams: 1, joinDate: '2023-10-14' },
+    { id: 3, name: 'Arun Kumar', email: 'arun.k@example.com', role: 'student', status: 'active', teams: 1, joinDate: '2023-10-13' },
+    { id: 4, name: 'Dr. Rajesh Verma', email: 'rajesh.v@example.com', role: 'mentor', status: 'active', teams: 0, joinDate: '2023-10-12' },
+    { id: 5, name: 'Ananya Shah', email: 'ananya.s@example.com', role: 'student', status: 'active', teams: 1, joinDate: '2023-10-11' },
+    { id: 6, name: 'Karan Mehta', email: 'karan.m@example.com', role: 'student', status: 'pending', teams: 0, joinDate: '2023-10-10' },
+    { id: 7, name: 'Zara Khan', email: 'zara.k@example.com', role: 'student', status: 'pending', teams: 0, joinDate: '2023-10-09' },
+    { id: 8, name: 'Dr. Meera Shah', email: 'meera.s@example.com', role: 'mentor', status: 'active', teams: 0, joinDate: '2023-10-08' }
   ];
 
   const competitions = [
-    { id: 1, title: 'Hackathon 2025', status: 'active', teams: 12, startDate: '2025-10-15', endDate: '2025-10-17' },
+    { id: 1, title: 'Annual Hackathon 2025', status: 'active', teams: 12, startDate: '2025-10-15', endDate: '2025-10-17' },
     { id: 2, title: 'Design Challenge', status: 'active', teams: 8, startDate: '2025-11-05', endDate: '2025-11-07' },
     { id: 3, title: 'AI Innovation Contest', status: 'upcoming', teams: 5, startDate: '2025-12-10', endDate: '2025-12-12' },
     { id: 4, title: 'Business Case Competition', status: 'upcoming', teams: 0, startDate: '2026-01-20', endDate: '2026-01-22' },
@@ -50,17 +62,18 @@ const AdminDashboard = () => {
   ];
 
   const teams = [
-    { id: 1, name: 'CodeCrafters', competition: 'Hackathon 2025', members: 4, status: 'active', createdDate: '2023-10-01' },
-    { id: 2, name: 'Design Wizards', competition: 'Design Challenge', members: 3, status: 'active', createdDate: '2023-10-02' },
+    { id: 1, name: 'CodeCrafters', competition: 'Annual Hackathon 2025', members: 4, status: 'active', createdDate: '2023-10-01' },
+    { id: 2, name: 'DesignDreamers', competition: 'Design Challenge', members: 3, status: 'active', createdDate: '2023-10-02' },
     { id: 3, name: 'AI Innovators', competition: 'AI Innovation Contest', members: 4, status: 'active', createdDate: '2023-10-03' },
-    { id: 4, name: 'Mobile Masters', competition: 'Hackathon 2025', members: 2, status: 'active', createdDate: '2023-10-04' },
-    { id: 5, name: 'Data Dynamos', competition: 'AI Innovation Contest', members: 3, status: 'active', createdDate: '2023-10-05' }
+    { id: 4, name: 'TechTitans', competition: 'Annual Hackathon 2025', members: 2, status: 'active', createdDate: '2023-10-04' },
+    { id: 5, name: 'DataDynamos', competition: 'AI Innovation Contest', members: 3, status: 'active', createdDate: '2023-10-05' }
   ];
 
-  // Filter data based on search term
+  // Filter users based on search term and role filter
   const filteredUsers = users.filter(user => 
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    (user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+     user.email.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (roleFilter === 'all' || user.role.toLowerCase() === roleFilter.toLowerCase())
   );
 
   const filteredCompetitions = competitions.filter(comp => 
@@ -125,6 +138,41 @@ const AdminDashboard = () => {
       default:
         return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const handleEditUser = (user) => {
+    setSelectedUser(user);
+    setShowEditModal(true);
+  };
+
+  const handleAddUser = () => {
+    setShowAddModal(true);
+  };
+
+  const handleSaveUser = (e) => {
+    e.preventDefault();
+    // In a real app, this would make an API call to save the user
+    setShowEditModal(false);
+    setShowSuccessAlert(true);
+    setAlertMessage('User updated successfully!');
+    setTimeout(() => setShowSuccessAlert(false), 3000);
+  };
+
+  const handleCreateUser = (e) => {
+    e.preventDefault();
+    // In a real app, this would make an API call to create the user
+    setShowAddModal(false);
+    setShowSuccessAlert(true);
+    setAlertMessage('User created successfully!');
+    setTimeout(() => setShowSuccessAlert(false), 3000);
+    setNewUser({
+      name: '',
+      email: '',
+      role: 'student',
+      status: 'active',
+      teams: '0',
+      joinDate: new Date().toISOString().split('T')[0]
+    });
   };
 
   if (!adminUser) {
@@ -436,6 +484,11 @@ const AdminDashboard = () => {
                   <div className="relative">
                     <select
                       className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                      value={roleFilter}
+                      onChange={(e) => {
+                        setRoleFilter(e.target.value);
+                        setCurrentPage(1); // Reset to first page when filter changes
+                      }}
                     >
                       <option value="all">All Roles</option>
                       <option value="student">Student</option>
@@ -443,7 +496,10 @@ const AdminDashboard = () => {
                       <option value="admin">Admin</option>
                     </select>
                   </div>
-                  <button className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition flex items-center">
+                  <button 
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition flex items-center"
+                    onClick={handleAddUser}
+                  >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                     </svg>
@@ -511,7 +567,10 @@ const AdminDashboard = () => {
                           {formatDate(user.joinDate)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <button className="text-indigo-600 hover:text-indigo-900 mr-3">
+                          <button 
+                            className="text-indigo-600 hover:text-indigo-900 mr-3"
+                            onClick={() => handleEditUser(user)}
+                          >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
@@ -636,6 +695,170 @@ const AdminDashboard = () => {
                   Delete
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Edit User Modal */}
+        {showEditModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-xl font-semibold">Edit User</h2>
+                <button
+                  onClick={() => setShowEditModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <form onSubmit={handleSaveUser} className="p-4">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Name</label>
+                    <input
+                      type="text"
+                      value={selectedUser?.name || ''}
+                      onChange={(e) => setSelectedUser({...selectedUser, name: e.target.value})}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Email</label>
+                    <input
+                      type="email"
+                      value={selectedUser?.email || ''}
+                      onChange={(e) => setSelectedUser({...selectedUser, email: e.target.value})}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Role</label>
+                    <select
+                      value={selectedUser?.role || ''}
+                      onChange={(e) => setSelectedUser({...selectedUser, role: e.target.value})}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    >
+                      <option value="student">Student</option>
+                      <option value="mentor">Mentor</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Status</label>
+                    <select
+                      value={selectedUser?.status || ''}
+                      onChange={(e) => setSelectedUser({...selectedUser, status: e.target.value})}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    >
+                      <option value="active">Active</option>
+                      <option value="inactive">Inactive</option>
+                      <option value="pending">Pending</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="mt-6 flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowEditModal(false)}
+                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Add User Modal */}
+        {showAddModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-xl font-semibold">Add New User</h2>
+                <button
+                  onClick={() => setShowAddModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <form onSubmit={handleCreateUser} className="p-4">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Name</label>
+                    <input
+                      type="text"
+                      value={newUser.name}
+                      onChange={(e) => setNewUser({...newUser, name: e.target.value})}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Email</label>
+                    <input
+                      type="email"
+                      value={newUser.email}
+                      onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Role</label>
+                    <select
+                      value={newUser.role}
+                      onChange={(e) => setNewUser({...newUser, role: e.target.value})}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    >
+                      <option value="student">Student</option>
+                      <option value="mentor">Mentor</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Status</label>
+                    <select
+                      value={newUser.status}
+                      onChange={(e) => setNewUser({...newUser, status: e.target.value})}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    >
+                      <option value="active">Active</option>
+                      <option value="inactive">Inactive</option>
+                      <option value="pending">Pending</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="mt-6 flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowAddModal(false)}
+                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                  >
+                    Create User
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}

@@ -20,10 +20,10 @@ const AdminCompetitions = () => {
   useEffect(() => {
     // Mock data loading
     const mockCompetitions = [
-      { id: 1, title: 'Hackathon 2025', description: 'Annual coding competition', status: 'active', teams: 12, startDate: '2025-10-15', endDate: '2025-10-17' },
-      { id: 2, title: 'Design Challenge', description: 'UI/UX design competition', status: 'active', teams: 8, startDate: '2025-11-05', endDate: '2025-11-07' },
-      { id: 3, title: 'AI Innovation', description: 'AI/ML competition', status: 'upcoming', teams: 5, startDate: '2025-12-10', endDate: '2025-12-12' },
-      { id: 4, title: 'Business Case', description: 'Business case analysis', status: 'draft', teams: 0, startDate: '2026-01-20', endDate: '2026-01-22' }
+      { id: 1, title: 'Annual Hackathon 2025', description: 'Build innovative solutions for real-world problems in 48 hours', status: 'active', teams: 12, startDate: '2025-10-15', endDate: '2025-10-17' },
+      { id: 2, title: 'Design Challenge', description: 'Create user-centered designs for next-gen applications', status: 'active', teams: 8, startDate: '2025-11-05', endDate: '2025-11-07' },
+      { id: 3, title: 'AI Innovation Contest', description: 'Develop cutting-edge AI solutions for industry challenges', status: 'upcoming', teams: 5, startDate: '2025-12-10', endDate: '2025-12-12' },
+      { id: 4, title: 'Business Case Competition', description: 'Analyze and solve real business challenges', status: 'draft', teams: 0, startDate: '2026-01-20', endDate: '2026-01-22' }
     ];
     setCompetitions(mockCompetitions);
     setLoading(false);
