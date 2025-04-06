@@ -281,14 +281,14 @@ const CompetitionDetails = () => {
             <div className="flex flex-col sm:flex-row gap-3 mt-4 md:mt-0">
               {!competition.isRegistered ? (
                 <button 
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center justify-center"
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center font-medium"
                   onClick={() => alert('Registration successful!')}
                 >
                   Register Now
                 </button>
               ) : (
                 <button 
-                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition flex items-center justify-center"
+                  className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center justify-center font-medium"
                   disabled
                 >
                   <CheckCircle size={18} className="mr-2" />
@@ -514,17 +514,26 @@ const CompetitionDetails = () => {
                 <div className="flex justify-between items-center mb-6">
                   <h3 className="text-xl font-semibold text-gray-800">Registered Teams</h3>
                   <button 
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center"
-                    onClick={handleCreateTeam}
+                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2 font-medium"
+                    onClick={() => navigate(`/team/create/${id}`)}
                   >
-                    <Users size={18} className="mr-2" />
+                    <Users size={18} />
                     Create Team
                   </button>
                 </div>
                 
                 {teams.length === 0 ? (
-                  <div className="text-center py-8">
-                    <p className="text-gray-600">No teams registered yet. Be the first to create a team!</p>
+                  <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+                    <Users size={40} className="mx-auto text-gray-400 mb-3" />
+                    <p className="text-gray-600 mb-2">No teams registered yet</p>
+                    <p className="text-sm text-gray-500 mb-4">Be the first to create a team!</p>
+                    <button 
+                      className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2 mx-auto font-medium"
+                      onClick={() => navigate(`/team/create/${id}`)}
+                    >
+                      <Users size={18} />
+                      Create Team
+                    </button>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -564,7 +573,7 @@ const CompetitionDetails = () => {
                           {team.lookingForMembers && (
                             <button 
                               onClick={() => handleJoinTeam(team.id)}
-                              className="px-3 py-1.5 text-sm border border-blue-600 text-blue-600 rounded hover:bg-blue-50 transition"
+                              className="px-4 py-1.5 text-sm border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition font-medium"
                             >
                               Request to Join
                             </button>

@@ -17,6 +17,9 @@ import MentorshipPage from './Components/MentorshipPage';
 import CalendarPage from './Components/CalenderPage';
 import { UserProvider } from './Contexts/UserContext';
 import TeamDetails from './Components/TeamDetails';
+import TeamCreate from './Components/TeamCreate';
+import AdminTeams from './Components/AdminTeams';
+import AdminCompetitions from './Components/AdminCompetitions';
 
 function App() {
   return (
@@ -45,6 +48,7 @@ function App() {
             } />
             
             <Route path="/competitions" element={<CompetitionsPage />} />
+            <Route path="/team/create/:id" element={<TeamCreate />} />
             <Route path="/mentorship" element={<MentorshipPage />} />
             <Route path="/calendar" element={<CalendarPage />} />
             
@@ -58,6 +62,8 @@ function App() {
                 </ProtectedAdminRoute>
               } 
             />
+            <Route path="/admin/teams" element={<AdminTeams />} />
+            <Route path="/admin/competitions" element={<AdminCompetitions />} />
           </Routes>
         </Router>
       </AdminAuthProvider>
