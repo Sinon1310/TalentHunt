@@ -15,9 +15,7 @@ const Landing = () => {
    // Function to handle navigation to competitions
    const handleExploreCompetitions = () => {
     navigate('/competitions');
-    // If you want to navigate to a specific competition:
-    // navigate('/competition/1'); // where 1 is the competition ID
-  };
+   };
 
   // Sample competitions data
   const competitions = [
@@ -88,211 +86,260 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white shadow-md">
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center">
-            <button onClick={()=>navigate('/profile')}>
-              <div className='flex items-center justify-center gap-2'>
-              <img className='w-15 h-15' src="http://talenthuntindia.in/assets/images/talenthunt.png" alt="" />
-              <div className="text-2xl font-extrabold text-blue-600">TalentHunt</div>
+            <button 
+             // onClick={()=>navigate('/profile')}
+              className="group flex items-center space-x-3 hover:opacity-80 transition-opacity"
+            >
+              <div className="relative">
+                <img 
+                  className="w-12 h-12 object-contain" 
+                  src="http://talenthuntindia.in/assets/images/talenthunt.png" 
+                  alt="TalentHunt Logo" 
+                />
+                <div className="absolute inset-0 bg-blue-600/10 rounded-full blur-sm group-hover:blur-md transition-all duration-300"></div>
               </div>
-            
-
+              <div className="flex flex-col">
+                <div className="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  TalentHunt
+                </div>
+                <div className="text-xs text-gray-500">Find Your Perfect Team</div>
+              </div>
             </button>
           </div>
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            <a href="#home" className="text-gray-700 hover:text-blue-600 font-medium">Home</a>
-            <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 font-medium">How It Works</a>
-            <a href="#features" className="text-gray-700 hover:text-blue-600 font-medium">Features</a>
-            <a href="#competitions" className="text-gray-700 hover:text-blue-600 font-medium">Competitions</a>
+            <a href="#home" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">Home</a>
+            <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">How It Works</a>
+            <a href="#features" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">Features</a>
+            <a href="#competitions" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">Competitions</a>
           </nav>
           
           <div className="hidden md:flex items-center space-x-4">
-  <Link to="/auth" className="px-4 py-2 text-blue-600 font-medium">Login</Link>
-  <Link to="/auth" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">Sign Up</Link>
-  </div>
+            <Link 
+              to="/auth" 
+              className="group px-6 py-2.5 text-blue-600 font-medium hover:text-blue-700 transition-colors duration-200 relative"
+            >
+              Login
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
+            </Link>
+            <Link 
+              to="/auth" 
+              className="group px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300 hover:-translate-y-0.5"
+            >
+              Sign Up
+            </Link>
+          </div>
           
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden text-gray-700"
+            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMenuOpen ? <X size={24} className="text-gray-700" /> : <Menu size={24} className="text-gray-700" />}
           </button>
         </div>
         
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden bg-white py-4 px-4 shadow-lg">
+          <div className="md:hidden bg-white/95 backdrop-blur-md py-4 px-4 shadow-lg">
             <nav className="flex flex-col space-y-4">
-              <a href="#home" className="text-gray-700 hover:text-blue-600 font-medium">Home</a>
-              <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 font-medium">How It Works</a>
-              <a href="#features" className="text-gray-700 hover:text-blue-600 font-medium">Features</a>
-              <a href="#competitions" className="text-gray-700 hover:text-blue-600 font-medium">Competitions</a>
-              <div className="pt-4 flex flex-col space-y-2">
-  <Link to="/auth" className="px-4 py-2 text-blue-600 border border-blue-600 rounded-md font-medium">Login</Link>
-  <Link to="/auth" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">Sign Up</Link>
-</div>
+              <a href="#home" className="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200">Home</a>
+              <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200">How It Works</a>
+              <a href="#features" className="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200">Features</a>
+              <a href="#competitions" className="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200">Competitions</a>
+              <div className="pt-4 flex flex-col space-y-3">
+                <Link 
+                  to="/auth" 
+                  className="px-6 py-2.5 text-blue-600 border border-blue-600 rounded-lg font-medium hover:bg-blue-50 transition-colors duration-200"
+                >
+                  Login
+                </Link>
+                <Link 
+                  to="/auth" 
+                  className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300"
+                >
+                  Sign Up
+                </Link>
+              </div>
             </nav>
           </div>
         )}
       </header>
 
      {/* Hero section */}
-<section className="relative min-h-[80vh] flex items-center bg-gradient-to-r from-blue-600 to-purple-600">
+<section className="relative min-h-[90vh] flex items-center bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 overflow-hidden">
+  <div className="absolute inset-0 bg-black opacity-20"></div>
+  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzYuMzY0IDM2LjM2NGwtMi44MjgtMi44MjggMi44MjgtMi44MjgtMi44MjgtMi44MjgtMi44MjggMi44MjgtMi44MjgtMi44MjgtMi44MjggMi44MjggMi44MjggMi44MjgtMi44MjggMi44MjggMi44MjggMi44MjgtMi44MjggMi44MjggMi44MjggMi44MjgtMi44Mjh6IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9Ii4xIi8+PC9nPjwvc3ZnPg==')] opacity-10"></div>
   <div className="container mx-auto px-4 py-20 text-center text-white relative z-10">
-    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+    <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight animate-fade-in">
       Find the Right Team. <br className="hidden md:block" />
-      Win the Challenge.
+      <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-500">
+        Win the Challenge.
+      </span>
     </h1>
-    <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto opacity-90">
+    <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto opacity-90 animate-fade-in-up">
       Connect with the perfect teammates, get expert mentorship, and track
       your progress all in one place.
     </p>
-    <div className="flex flex-col sm:flex-row gap-6 justify-center">
+    <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in-up">
       <button
         onClick={handleCreateProfile}
-        className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-lg font-semibold text-lg transition-colors shadow-lg hover:shadow-xl"
+        className="group bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
       >
         Create Your Profile
       </button>
       <button
         onClick={handleExploreCompetitions}
-        className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-4 rounded-lg font-semibold text-lg transition-colors"
+        className="group bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:-translate-y-1"
       >
         Explore Competitions
       </button>
     </div>
   </div>
-  {/* Optional: Add a subtle pattern overlay */}
-  <div className="absolute inset-0 bg-black opacity-10 pattern-grid"></div>
+  <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-50 to-transparent"></div>
 </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-16 bg-white">
+      <section id="how-it-works" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">How It Works</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-6 rounded-lg hover:shadow-lg transition">
-              <div className="bg-blue-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <Users className="text-blue-600" size={24} />
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+              How It Works
+            </span>
+          </h2>
+          <div className="grid md:grid-cols-3 gap-12">
+            <div className="group text-center p-8 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-gradient-to-b from-white to-gray-50">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-6 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                <Users className="text-white" size={32} />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Create Your Profile</h3>
-              <p className="text-gray-600">Add your skills, experience, and interests to find the perfect match.</p>
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800">Create Your Profile</h3>
+              <p className="text-gray-600 leading-relaxed">Add your skills, experience, and interests to find the perfect match for your next competition.</p>
             </div>
-            <div className="text-center p-6 rounded-lg hover:shadow-lg transition">
-              <div className="bg-blue-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <Search className="text-blue-600" size={24} />
+            <div className="group text-center p-8 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-gradient-to-b from-white to-gray-50">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-6 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                <Search className="text-white" size={32} />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Get Matched</h3>
-              <p className="text-gray-600">Our algorithm matches you with teammates who complement your skills.</p>
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800">Get Matched</h3>
+              <p className="text-gray-600 leading-relaxed">Our smart algorithm matches you with teammates who complement your skills and experience.</p>
             </div>
-            <div className="text-center p-6 rounded-lg hover:shadow-lg transition">
-              <div className="bg-blue-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <UserPlus className="text-blue-600" size={24} />
+            <div className="group text-center p-8 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-gradient-to-b from-white to-gray-50">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-6 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                <UserPlus className="text-white" size={32} />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Request a Mentor</h3>
-              <p className="text-gray-600">Get guidance from experienced faculty mentors and track your progress.</p>
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800">Request a Mentor</h3>
+              <p className="text-gray-600 leading-relaxed">Get expert guidance from experienced faculty mentors and track your team's progress.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-16 bg-gray-50">
+      <section id="features" className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Key Features</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-              <div className="bg-blue-100 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                <Users className="text-blue-600" size={20} />
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+              Key Features
+            </span>
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-4 rounded-xl w-14 h-14 flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                <Users className="text-white" size={24} />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Automated Team Formation</h3>
-              <p className="text-gray-600">Our algorithm matches students based on complementary skills and experience.</p>
+              <h3 className="text-xl font-semibold mb-3 text-gray-800">Automated Team Formation</h3>
+              <p className="text-gray-600 leading-relaxed">Our smart algorithm matches students based on complementary skills and experience.</p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-              <div className="bg-blue-100 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                <Search className="text-blue-600" size={20} />
+            <div className="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-4 rounded-xl w-14 h-14 flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                <Search className="text-white" size={24} />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Skill-Based Search</h3>
-              <p className="text-gray-600">Find teammates with specific skills that your team needs to succeed.</p>
+              <h3 className="text-xl font-semibold mb-3 text-gray-800">Skill-Based Search</h3>
+              <p className="text-gray-600 leading-relaxed">Find teammates with specific skills that your team needs to succeed.</p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-              <div className="bg-blue-100 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                <UserPlus className="text-blue-600" size={20} />
+            <div className="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-4 rounded-xl w-14 h-14 flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                <UserPlus className="text-white" size={24} />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Mentor Allocation</h3>
-              <p className="text-gray-600">Get matched with faculty mentors who can provide guidance and feedback.</p>
+              <h3 className="text-xl font-semibold mb-3 text-gray-800">Mentor Allocation</h3>
+              <p className="text-gray-600 leading-relaxed">Get matched with faculty mentors who can provide guidance and feedback.</p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-              <div className="bg-blue-100 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                <BarChart2 className="text-blue-600" size={20} />
+            <div className="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-4 rounded-xl w-14 h-14 flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                <BarChart2 className="text-white" size={24} />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Progress Tracking</h3>
-              <p className="text-gray-600">Monitor your team's progress and get insights to improve performance.</p>
+              <h3 className="text-xl font-semibold mb-3 text-gray-800">Progress Tracking</h3>
+              <p className="text-gray-600 leading-relaxed">Monitor your team's progress and get insights to improve performance.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Competitions Showcase */}
-      <section id="competitions" className="py-16 bg-white">
+      <section id="competitions" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Upcoming Competitions</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+              Upcoming Competitions
+            </span>
+          </h2>
           
-          <div className="relative max-w-4xl mx-auto">
-            <div className="overflow-hidden">
+          <div className="relative max-w-5xl mx-auto">
+            <div className="overflow-hidden rounded-2xl shadow-xl">
               <div 
                 className="flex transition-transform duration-500 ease-in-out" 
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
               >
-               {competitions.map((competition) => (
-  <div key={competition.id} className="w-full flex-shrink-0 px-4">
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-      <div className="h-64 relative"> {/* Increased height and added relative positioning */}
-        <img 
-          src={competition.image || "/placeholder.svg"} 
-          alt={competition.title} 
-          className="w-full h-full object-cover absolute inset-0" /* Updated image styling */
-          style={{ objectFit: 'cover' }}
-        />
-      </div>
-      <div className="p-6">
-        <h3 className="text-xl font-semibold mb-2">{competition.title}</h3>
-        <p className="text-gray-600 mb-3">{competition.description}</p>
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-blue-600 font-medium">{competition.date}</span>
-         
-        </div>
-      </div>
-    </div>
-  </div>
-))}
+                {competitions.map((competition) => (
+                  <div key={competition.id} className="w-full flex-shrink-0">
+                    <div className="bg-white overflow-hidden">
+                      <div className="h-80 relative group">
+                        <img 
+                          src={competition.image} 
+                          alt={competition.title} 
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      </div>
+                      <div className="p-8">
+                        <h3 className="text-2xl font-semibold mb-4 text-gray-800">{competition.title}</h3>
+                        <p className="text-gray-600 mb-6 leading-relaxed">{competition.description}</p>
+                        <div className="flex justify-between items-center">
+                          <span className="text-blue-600 font-medium">{competition.date}</span>
+                          {/* <button className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                            Learn More
+                          </button> */}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
             
             <button 
-              className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-4 bg-white p-2 rounded-full shadow-md hover:bg-gray-100"
+              className="absolute top-1/2 left-4 -translate-y-1/2 bg-white/90 p-3 rounded-full shadow-lg hover:bg-white transition-all duration-300 hover:-translate-x-1"
               onClick={prevSlide}
             >
               <ChevronLeft size={24} className="text-blue-600" />
             </button>
             
             <button 
-              className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-4 bg-white p-2 rounded-full shadow-md hover:bg-gray-100"
+              className="absolute top-1/2 right-4 -translate-y-1/2 bg-white/90 p-3 rounded-full shadow-lg hover:bg-white transition-all duration-300 hover:translate-x-1"
               onClick={nextSlide}
             >
               <ChevronRight size={24} className="text-blue-600" />
             </button>
             
-            <div className="flex justify-center mt-6 space-x-2">
+            <div className="flex justify-center mt-8 space-x-3">
               {competitions.map((_, index) => (
                 <button
                   key={index}
-                  className={`w-3 h-3 rounded-full ${
-                    currentSlide === index ? 'bg-blue-600' : 'bg-gray-300'
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    currentSlide === index ? 'bg-blue-600 w-6' : 'bg-gray-300 hover:bg-gray-400'
                   }`}
                   onClick={() => setCurrentSlide(index)}
                 />
@@ -300,8 +347,11 @@ const Landing = () => {
             </div>
           </div>
           
-          <div className="text-center mt-10">
-            <button className="px-6 py-3 border-2 border-blue-600 text-blue-600 rounded-md font-medium hover:bg-blue-600 hover:text-white transition">
+          <div className="text-center mt-12">
+            <button 
+              onClick={handleExploreCompetitions}
+              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium text-lg hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+            >
               View All Competitions
             </button>
           </div>
@@ -334,18 +384,47 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Join the Challenge?</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">Create your profile today and start connecting with the perfect teammates for your next competition.</p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button className="px-6 py-3 bg-white text-blue-600 rounded-md font-medium hover:bg-gray-100 transition">
-              Create Your Profile
-            </button>
-            <button className="px-6 py-3 bg-transparent border-2 border-white text-white rounded-md font-medium hover:bg-white hover:text-blue-600 transition">
-              Explore Competitions
-            </button>
+      {/* Clean Call to Action */}
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600"></div>
+        
+        {/* Animated Background Circles */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-white opacity-5 rounded-full"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white opacity-5 rounded-full"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative">
+          <div className="max-w-4xl mx-auto text-center">
+            <Link 
+              to="/auth" 
+              className="group inline-block text-center hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="text-white space-y-4">
+                <h2 className="text-4xl font-light mb-2">
+                  Ready to start your journey?
+                </h2>
+                <p className="text-white/80 text-lg font-light">
+                  Join our community of innovators today
+                </p>
+                <div className="flex items-center justify-center gap-2 text-white/90 mt-6 group-hover:text-white">
+                  <span className="text-sm uppercase tracking-wider">Get Started</span>
+                  <svg 
+                    className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth="2" 
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
       </section>

@@ -1,92 +1,195 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, User, MessageSquare, Plus, X, Edit2, CheckCircle, Clock, AlertCircle, Award, Calendar, Users, Trash2 } from 'lucide-react';
+import TeamChat from './TeamChat';
 
 const TeamManagement = () => {
   const { id } = useParams(); // Get team ID from URL parameters
   const [activeTab, setActiveTab] = useState('overview');
+  const [showChat, setShowChat] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState('');
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [messageContent, setMessageContent] = useState('');
+  const [selectedMember, setSelectedMember] = useState(null);
+  const [showMentorModal, setShowMentorModal] = useState(false);
+  const [mentorMessage, setMentorMessage] = useState('');
   
-  // Sample team data - in a real app, this would be fetched from an API
-  const [teamData, setTeamData] = useState({
-    id: id || 1, // Use the ID from URL params or default to 1
-    name: "CodeCrafters",
-    competition: "Annual Hackathon 2025",
-    description: "We're building an AI-powered solution for sustainable urban planning. Our application will help city planners optimize resource allocation and reduce environmental impact.",
-    members: [
-      {
+  // Sample teams data - in a real app, this would be fetched from an API
+  const teamsData = {
+    // CodeCrafters - Annual Hackathon
+    "101": {
+      id: 101,
+      name: "CodeCrafters",
+      competition: "Annual Hackathon 2025",
+      competitionId: 1,
+      description: "We're building an AI-powered solution for sustainable urban planning. Our application will help city planners optimize resource allocation and reduce environmental impact.",
+      members: [
+        {
+          id: 1,
+          name: "Rahul Sharma",
+          role: "Team Leader",
+          skills: ["React", "Node.js", "Project Management"],
+          avatar: null
+        },
+        {
+          id: 2,
+          name: "Priya Patel",
+          role: "UI/UX Designer",
+          skills: ["Figma", "User Research", "Prototyping"],
+          avatar: null
+        },
+        {
+          id: 3,
+          name: "Arun Kumar",
+          role: "Backend Developer",
+          skills: ["Node.js", "MongoDB", "Express"],
+          avatar: null
+        }
+      ],
+      mentor: {
         id: 1,
-        name: "Alex Johnson",
-        role: "Team Leader",
-        skills: ["React", "Node.js", "Project Management"],
-        avatar: null
+        name: "Dr. Rajesh Verma",
+        expertise: "AI and Machine Learning",
+        department: "Computer Science"
       },
-      {
-        id: 2,
-        name: "Sarah Chen",
-        role: "UI/UX Designer",
-        skills: ["Figma", "User Research", "Prototyping"],
-        avatar: null
-      },
-      {
-        id: 3,
-        name: "Michael Brown",
-        role: "Backend Developer",
-        skills: ["Node.js", "MongoDB", "Express"],
-        avatar: null
-      }
-    ],
-    mentor: {
-      id: 1,
-      name: "Dr. Joseph",
-      expertise: "AI and Machine Learning",
-      department: "Computer Science"
+      tasks: [
+        {
+          id: 1,
+          title: "Create project proposal",
+          assignedTo: "Rahul Sharma",
+          status: "completed",
+          dueDate: "2025-10-05"
+        },
+        {
+          id: 2,
+          title: "Design UI mockups",
+          assignedTo: "Priya Patel",
+          status: "in-progress",
+          dueDate: "2025-10-10"
+        }
+      ],
+      lookingFor: ["Data Scientist"]
     },
-    tasks: [
-      {
-        id: 1,
-        title: "Create project proposal",
-        assignedTo: "Alex Johnson",
-        status: "completed",
-        dueDate: "2025-10-05"
-      },
-      {
+    // TechTitans - Annual Hackathon
+    "102": {
+      id: 102,
+      name: "TechTitans",
+      competition: "Annual Hackathon 2025",
+      competitionId: 1,
+      description: "Developing a smart energy management system for homes using IoT and machine learning.",
+      members: [
+        {
+          id: 4,
+          name: "Vikram Singh",
+          role: "Team Leader",
+          skills: ["Python", "Machine Learning", "IoT"],
+          avatar: null
+        },
+        {
+          id: 5,
+          name: "Neha Gupta",
+          role: "Full Stack Developer",
+          skills: ["React", "Node.js", "MongoDB"],
+          avatar: null
+        },
+        {
+          id: 6,
+          name: "Raj Patel",
+          role: "IoT Specialist",
+          skills: ["Arduino", "Raspberry Pi", "Sensors"],
+          avatar: null
+        }
+      ],
+      mentor: {
         id: 2,
-        title: "Design UI mockups",
-        assignedTo: "Sarah Chen",
-        status: "in-progress",
-        dueDate: "2025-10-10"
+        name: "Dr. Meera Shah",
+        expertise: "IoT and Embedded Systems",
+        department: "Electronics Engineering"
       },
-      {
+      tasks: [
+        {
+          id: 1,
+          title: "IoT Architecture Design",
+          assignedTo: "Raj Patel",
+          status: "completed",
+          dueDate: "2025-10-05"
+        },
+        {
+          id: 2,
+          title: "ML Model Development",
+          assignedTo: "Vikram Singh",
+          status: "in-progress",
+          dueDate: "2025-10-12"
+        }
+      ],
+      lookingFor: ["UI/UX Designer"]
+    },
+    // DesignDreamers - Design Challenge
+    "201": {
+      id: 201,
+      name: "DesignDreamers",
+      competition: "Design Challenge",
+      competitionId: 2,
+      description: "Creating an innovative healthcare app design focused on mental wellness and meditation.",
+      members: [
+        {
+          id: 7,
+          name: "Ananya Shah",
+          role: "Team Leader",
+          skills: ["UI/UX Design", "User Research", "Figma"],
+          avatar: null
+        },
+        {
+          id: 8,
+          name: "Karan Mehta",
+          role: "Visual Designer",
+          skills: ["Illustration", "Animation", "Branding"],
+          avatar: null
+        },
+        {
+          id: 9,
+          name: "Zara Khan",
+          role: "UX Researcher",
+          skills: ["User Research", "Prototyping", "Analytics"],
+          avatar: null
+        }
+      ],
+      mentor: {
         id: 3,
-        title: "Set up database schema",
-        assignedTo: "Michael Brown",
-        status: "in-progress",
-        dueDate: "2025-10-12"
+        name: "Prof. Arjun Desai",
+        expertise: "Human-Computer Interaction",
+        department: "Design"
       },
-      {
-        id: 4,
-        title: "Implement authentication",
-        assignedTo: "Michael Brown",
-        status: "pending",
-        dueDate: "2025-10-15"
-      },
-      {
-        id: 5,
-        title: "Develop AI algorithm",
-        assignedTo: "Team",
-        status: "pending",
-        dueDate: "2025-10-20"
-      }
-    ],
-    lookingFor: ["Data Scientist"]
-  });
-  
+      tasks: [
+        {
+          id: 1,
+          title: "User Research",
+          assignedTo: "Zara Khan",
+          status: "completed",
+          dueDate: "2025-11-01"
+        },
+        {
+          id: 2,
+          title: "UI Design System",
+          assignedTo: "Karan Mehta",
+          status: "in-progress",
+          dueDate: "2025-11-05"
+        }
+      ],
+      lookingFor: ["Motion Designer"]
+    }
+  };
+
+  // Get team data based on ID
+  const [teamData, setTeamData] = useState(teamsData[id] || teamsData["101"]);
+
   // Add useEffect to fetch team data based on ID
   useEffect(() => {
-    // In a real app, you would fetch team data here
-    console.log(`Team ID: ${id}`);
-    // Example API call:
-    // fetchTeamData(id).then(data => setTeamData(data));
+    // Update team data when ID changes
+    setTeamData(teamsData[id] || teamsData["101"]);
+    console.log(`Loading team data for ID: ${id}`);
   }, [id]);
   
   // State for new task form
@@ -201,13 +304,51 @@ const TeamManagement = () => {
     }
   };
 
+  const handleSendMessage = (member) => {
+    setSelectedMember(member);
+    setShowMessageModal(true);
+  };
+
+  const handleSubmitMessage = (e) => {
+    e.preventDefault();
+    // Here you would typically send the message to your backend
+    console.log(`Sending message to ${selectedMember.name}: ${messageContent}`);
+    setShowMessageModal(false);
+    setMessageContent('');
+  };
+
+  const handleInviteMember = () => {
+    setShowInviteModal(true);
+  };
+
+  const handleSubmitInvite = (e) => {
+    e.preventDefault();
+    // Here you would typically send the invite to your backend
+    console.log(`Inviting ${inviteEmail} as ${inviteRole}`);
+    setShowInviteModal(false);
+    setInviteEmail('');
+    setInviteRole('');
+  };
+
+  const handleContactMentor = () => {
+    setShowMentorModal(true);
+  };
+
+  const handleSubmitMentorMessage = (e) => {
+    e.preventDefault();
+    // Here you would typically send the message to your backend
+    console.log(`Sending message to mentor ${teamData.mentor.name}: ${mentorMessage}`);
+    setShowMentorModal(false);
+    setMentorMessage('');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-3">
           <div className="flex justify-between items-center">
-            <div className="text-2xl font-bold text-blue-600">TeamMatch</div>
+            <div className="text-2xl font-bold text-blue-600">TalentHunt</div>
             
             {/* User Menu */}
             <div className="flex items-center space-x-4">
@@ -237,11 +378,14 @@ const TeamManagement = () => {
               <p className="text-gray-600">Competition: {teamData.competition}</p>
             </div>
             <div className="mt-4 md:mt-0 flex space-x-3">
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center">
+              <button 
+                onClick={() => setShowChat(true)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center"
+              >
                 <MessageSquare size={18} className="mr-2" />
                 Team Chat
               </button>
-              <Link to={`/competition/${1}`} className="px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition">
+              <Link to={`/competition/${teamData.competitionId}`} className="px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition">
                 View Competition
               </Link>
             </div>
@@ -251,6 +395,26 @@ const TeamManagement = () => {
             <p className="text-gray-700">{teamData.description}</p>
           </div>
         </div>
+        
+        {/* Chat Modal */}
+        {showChat && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+            <div className="fixed inset-0 flex items-center justify-center p-4">
+              <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl h-[80vh] flex flex-col">
+                <div className="flex items-center justify-between p-4 border-b">
+                  <h2 className="text-xl font-semibold">Team Chat</h2>
+                  <button
+                    onClick={() => setShowChat(false)}
+                    className="p-2 hover:bg-gray-100 rounded-full"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+                <TeamChat />
+              </div>
+            </div>
+          </div>
+        )}
         
         {/* Tabs */}
         <div className="mb-6 border-b border-gray-200">
@@ -358,7 +522,10 @@ const TeamManagement = () => {
                             </span>
                           ))}
                         </div>
-                        <button className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-sm flex items-center">
+                        <button 
+                          onClick={handleInviteMember}
+                          className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-sm flex items-center"
+                        >
                           <Plus size={16} className="mr-1" />
                           Invite Members
                         </button>
@@ -379,7 +546,10 @@ const TeamManagement = () => {
                           <h4 className="font-medium text-gray-800">{teamData.mentor.name}</h4>
                           <p className="text-sm text-gray-600">{teamData.mentor.expertise}</p>
                           <p className="text-sm text-gray-600">{teamData.mentor.department}</p>
-                          <button className="mt-3 px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition text-sm flex items-center">
+                          <button 
+                            onClick={handleContactMentor}
+                            className="mt-3 px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition text-sm flex items-center"
+                          >
                             <MessageSquare size={16} className="mr-1" />
                             Contact Mentor
                           </button>
@@ -404,7 +574,7 @@ const TeamManagement = () => {
                         </div>
                         <div>
                           <p className="text-gray-800">
-                            <span className="font-medium">Sarah Chen</span> completed the task <span className="font-medium">Design UI mockups</span>
+                            <span className="font-medium">Priya Patel</span> completed the task <span className="font-medium">Design UI mockups</span>
                           </p>
                           <p className="text-sm text-gray-500">2 hours ago</p>
                         </div>
@@ -418,7 +588,7 @@ const TeamManagement = () => {
                         </div>
                         <div>
                           <p className="text-gray-800">
-                            <span className="font-medium">Dr. James Wilson</span> left a comment on your project proposal
+                            <span className="font-medium">Dr. Rajesh Verma</span> left a comment on your project proposal
                           </p>
                           <p className="text-sm text-gray-500">Yesterday</p>
                         </div>
@@ -432,7 +602,7 @@ const TeamManagement = () => {
                         </div>
                         <div>
                           <p className="text-gray-800">
-                            <span className="font-medium">Michael Brown</span> started working on <span className="font-medium">Set up database schema</span>
+                            <span className="font-medium">Arun Kumar</span> started working on <span className="font-medium">Set up database schema</span>
                           </p>
                           <p className="text-sm text-gray-500">2 days ago</p>
                         </div>
@@ -449,7 +619,10 @@ const TeamManagement = () => {
             <div>
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold text-gray-800">Team Members</h2>
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center">
+                <button 
+                  onClick={handleInviteMember}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center"
+                >
                   <Plus size={18} className="mr-2" />
                   Invite Member
                 </button>
@@ -491,7 +664,10 @@ const TeamManagement = () => {
                           
                           <div>
                             <h4 className="text-sm font-medium text-gray-700 mb-1">Contact</h4>
-                            <button className="mt-1 px-3 py-1 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition text-sm flex items-center">
+                            <button 
+                              onClick={() => handleSendMessage(member)}
+                              className="mt-1 px-3 py-1 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition text-sm flex items-center"
+                            >
                               <MessageSquare size={14} className="mr-1" />
                               Send Message
                             </button>
@@ -499,7 +675,7 @@ const TeamManagement = () => {
                         </div>
                       </div>
                       
-                      {member.name === "Alex Johnson" && (
+                      {member.name === "Rahul Sharma" && (
                         <div className="mt-4 md:mt-0 md:ml-4 flex-shrink-0 text-center md:text-left">
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                             Team Leader
@@ -520,7 +696,10 @@ const TeamManagement = () => {
                         </span>
                       ))}
                     </div>
-                    <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center mx-auto">
+                    <button 
+                      onClick={handleInviteMember}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center mx-auto"
+                    >
                       <Plus size={18} className="mr-2" />
                       Invite Members
                     </button>
@@ -870,7 +1049,7 @@ const TeamManagement = () => {
                         <h4 className="font-medium text-gray-800">Mentor Check-in</h4>
                         <span className="text-sm text-gray-500">October 5, 2025</span>
                       </div>
-                      <p className="text-gray-700">Dr. Wilson reviewed our project proposal and suggested focusing more on the AI algorithm's sustainability metrics. We'll incorporate his feedback in the next iteration.</p>
+                      <p className="text-gray-700">Dr. Rajesh Verma reviewed our project proposal and suggested focusing more on the AI algorithm's sustainability metrics. We'll incorporate his feedback in the next iteration.</p>
                     </div>
                   </div>
                   <button className="mt-4 px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition flex items-center w-full justify-center">
@@ -883,6 +1062,169 @@ const TeamManagement = () => {
           )}
         </div>
       </main>
+
+      {/* Message Modal */}
+      {showMessageModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-xl font-semibold">Send Message to {selectedMember?.name}</h2>
+                <button
+                  onClick={() => setShowMessageModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <form onSubmit={handleSubmitMessage} className="p-4">
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Message
+                  </label>
+                  <textarea
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    rows="4"
+                    value={messageContent}
+                    onChange={(e) => setMessageContent(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                    onClick={() => setShowMessageModal(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Send Message
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Invite Member Modal */}
+      {showInviteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-xl font-semibold">Invite Team Member</h2>
+                <button
+                  onClick={() => setShowInviteModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <form onSubmit={handleSubmitInvite} className="p-4">
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    value={inviteEmail}
+                    onChange={(e) => setInviteEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Role
+                  </label>
+                  <select
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    value={inviteRole}
+                    onChange={(e) => setInviteRole(e.target.value)}
+                    required
+                  >
+                    <option value="">Select a role</option>
+                    <option value="Frontend Developer">Frontend Developer</option>
+                    <option value="Backend Developer">Backend Developer</option>
+                    <option value="UI/UX Designer">UI/UX Designer</option>
+                    <option value="Data Scientist">Data Scientist</option>
+                    <option value="ML Engineer">ML Engineer</option>
+                  </select>
+                </div>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                    onClick={() => setShowInviteModal(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Send Invite
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mentor Contact Modal */}
+      {showMentorModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-xl font-semibold">Contact Mentor - {teamData.mentor.name}</h2>
+                <button
+                  onClick={() => setShowMentorModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <form onSubmit={handleSubmitMentorMessage} className="p-4">
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Message
+                  </label>
+                  <textarea
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    rows="4"
+                    value={mentorMessage}
+                    onChange={(e) => setMentorMessage(e.target.value)}
+                    placeholder="Type your message to the mentor..."
+                    required
+                  />
+                </div>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                    onClick={() => setShowMentorModal(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Send Message
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
