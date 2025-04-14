@@ -1,14 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Users, Calendar, MessageSquare, Award, Search, Bell, ChevronDown, User, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { Users, Calendar, MessageSquare, Award, Search, Bell, ChevronDown, User, CheckCircle, Clock, AlertCircle, X } from 'lucide-react';
 import { useUser } from '../Contexts/UserContext';
 
-const MentorDashboard = () => {
+const MentorDashboard = ({ activeTab: initialActiveTab }) => {
   const { user, logout } = useUser();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('teams');
+  const [activeTab, setActiveTab] = useState(initialActiveTab || 'teams');
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [selectedTeamMember, setSelectedTeamMember] = useState(null);
+  const [messageContent, setMessageContent] = useState('');
+  const [showMemberSelect, setShowMemberSelect] = useState(null);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [showRescheduleModal, setShowRescheduleModal] = useState(false);
+  const [selectedMeeting, setSelectedMeeting] = useState(null);
+  const [meetingForm, setMeetingForm] = useState({
+    team: '',
+    date: '',
+    startTime: '',
+    endTime: '',
+    type: 'Progress Review',
+    description: ''
+  });
+  const [isViewingAllTeams, setIsViewingAllTeams] = useState(initialActiveTab === 'teams');
+
+  // Effect to update isViewingAllTeams when activeTab changes
+  useEffect(() => {
+    setIsViewingAllTeams(activeTab === 'teams');
+  }, [activeTab]);
 
   // Handle logout
   const handleLogout = () => {
@@ -131,6 +152,90 @@ const MentorDashboard = () => {
     team.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     team.competition.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Get teams to display based on view mode
+  const teamsToDisplay = isViewingAllTeams ? filteredTeams : filteredTeams.slice(0, 3);
+
+  const handleSendMessageClick = (team) => {
+    setShowMemberSelect(team.id);
+  };
+
+  const handleSendMessage = (member) => {
+    setSelectedTeamMember(member);
+    setShowMessageModal(true);
+    setShowMemberSelect(null);
+  };
+
+  const handleSubmitMessage = (e) => {
+    e.preventDefault();
+    // Here you would typically send the message to your backend
+    console.log(`Sending message to ${selectedTeamMember.name}: ${messageContent}`);
+    alert('Message sent successfully!');
+    setShowMessageModal(false);
+    setMessageContent('');
+    setSelectedTeamMember(null);
+  };
+
+  // Add click outside handler to close member select dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showMemberSelect && !event.target.closest('.relative')) {
+        setShowMemberSelect(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [showMemberSelect]);
+
+  // Handle meeting form changes
+  const handleMeetingFormChange = (e) => {
+    const { name, value } = e.target;
+    setMeetingForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Handle schedule meeting
+  const handleScheduleMeeting = (e) => {
+    e.preventDefault();
+    // Here you would typically send this to your backend
+    console.log('Scheduling meeting:', meetingForm);
+    alert('Meeting scheduled successfully!');
+    setShowScheduleModal(false);
+    setMeetingForm({
+      team: '',
+      date: '',
+      startTime: '',
+      endTime: '',
+      type: 'Progress Review',
+      description: ''
+    });
+  };
+
+  // Handle reschedule meeting
+  const handleRescheduleMeeting = (meeting) => {
+    setSelectedMeeting(meeting);
+    setShowRescheduleModal(true);
+    // Pre-fill the form with current meeting details
+    setMeetingForm({
+      team: meeting.team,
+      date: meeting.date,
+      startTime: meeting.time.split(' - ')[0],
+      endTime: meeting.time.split(' - ')[1],
+      type: meeting.type,
+      description: ''
+    });
+  };
+
+  // Handle join meeting
+  const handleJoinMeeting = (meeting) => {
+    // Here you would typically integrate with your video conferencing solution
+    window.open('https://meet.google.com', '_blank');
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -306,14 +411,18 @@ const MentorDashboard = () => {
               <div>
                 <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
                   <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-semibold text-gray-800">My Teams</h2>
-                    <Link to="/teams" className="text-sm text-blue-600 hover:text-blue-700">
-                      View All
-                    </Link>
+                    <h2 className="text-lg font-semibold text-gray-800">
+                      {isViewingAllTeams ? 'All Teams' : 'My Teams'}
+                    </h2>
+                    {!isViewingAllTeams && (
+                      <Link to="/mentor/teams" className="text-sm text-blue-600 hover:text-blue-700">
+                        View All
+                      </Link>
+                    )}
                   </div>
                   
                   <div className="space-y-6">
-                    {filteredTeams.map((team) => (
+                    {teamsToDisplay.map((team) => (
                       <div key={team.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                           <div>
@@ -360,15 +469,27 @@ const MentorDashboard = () => {
                           >
                             View Team
                           </Link>
-                          <button 
-                            onClick={() => {
-                              // In a real app, this would open a modal or navigate to a messaging interface
-                              alert('Message feature will be implemented soon!');
-                            }}
-                            className="px-3 py-1 border border-blue-600 text-blue-600 text-sm rounded hover:bg-blue-50"
-                          >
-                            Send Message
-                          </button>
+                          <div className="relative">
+                            <button 
+                              onClick={() => handleSendMessageClick(team)}
+                              className="px-3 py-1 border border-blue-600 text-blue-600 text-sm rounded hover:bg-blue-50"
+                            >
+                              Send Message
+                            </button>
+                            {showMemberSelect === team.id && (
+                              <div className="absolute z-10 mt-1 w-48 bg-white rounded-md shadow-lg py-1">
+                                {team.members.map((member) => (
+                                  <button
+                                    key={member.id}
+                                    onClick={() => handleSendMessage(member)}
+                                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                  >
+                                    {member.name} ({member.role})
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                           {team.pendingFeedback && (
                             <Link
                               to={`/team/${team.id}?tab=feedback`}
@@ -435,7 +556,10 @@ const MentorDashboard = () => {
                 <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
                   <div className="flex justify-between items-center mb-4">
                     <h2 className="text-lg font-semibold text-gray-800">Upcoming Meetings</h2>
-                    <button className="text-sm text-blue-600 hover:text-blue-700 flex items-center">
+                    <button 
+                      onClick={() => setShowScheduleModal(true)}
+                      className="text-sm text-blue-600 hover:text-blue-700 flex items-center"
+                    >
                       <Calendar size={16} className="mr-1" />
                       Schedule Meeting
                     </button>
@@ -463,10 +587,16 @@ const MentorDashboard = () => {
                           </div>
                           
                           <div className="mt-4 md:mt-0 flex space-x-3">
-                            <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+                            <button 
+                              onClick={() => handleJoinMeeting(meeting)}
+                              className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                            >
                               Join Meeting
                             </button>
-                            <button className="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded hover:bg-gray-50">
+                            <button 
+                              onClick={() => handleRescheduleMeeting(meeting)}
+                              className="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded hover:bg-gray-50"
+                            >
                               Reschedule
                             </button>
                           </div>
@@ -543,6 +673,299 @@ const MentorDashboard = () => {
           </div>
         </div>
       </main>
+
+      {/* Message Modal */}
+      {showMessageModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-xl font-semibold">Send Message to {selectedTeamMember?.name}</h2>
+                <button
+                  onClick={() => {
+                    setShowMessageModal(false);
+                    setSelectedTeamMember(null);
+                    setMessageContent('');
+                  }}
+                  className="p-2 hover:bg-gray-100 rounded-full"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <form onSubmit={handleSubmitMessage} className="p-4">
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Message
+                  </label>
+                  <textarea
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    rows="4"
+                    value={messageContent}
+                    onChange={(e) => setMessageContent(e.target.value)}
+                    placeholder="Type your message here..."
+                    required
+                  />
+                </div>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                    onClick={() => {
+                      setShowMessageModal(false);
+                      setSelectedTeamMember(null);
+                      setMessageContent('');
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Send Message
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Schedule Meeting Modal */}
+      {showScheduleModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-xl font-semibold">Schedule New Meeting</h2>
+                <button
+                  onClick={() => setShowScheduleModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <form onSubmit={handleScheduleMeeting} className="p-4">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Team
+                    </label>
+                    <select
+                      name="team"
+                      value={meetingForm.team}
+                      onChange={handleMeetingFormChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    >
+                      <option value="">Select a team</option>
+                      {mentorTeams.map(team => (
+                        <option key={team.id} value={team.name}>{team.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Date
+                    </label>
+                    <input
+                      type="date"
+                      name="date"
+                      value={meetingForm.date}
+                      onChange={handleMeetingFormChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Start Time
+                      </label>
+                      <input
+                        type="time"
+                        name="startTime"
+                        value={meetingForm.startTime}
+                        onChange={handleMeetingFormChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        End Time
+                      </label>
+                      <input
+                        type="time"
+                        name="endTime"
+                        value={meetingForm.endTime}
+                        onChange={handleMeetingFormChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Meeting Type
+                    </label>
+                    <select
+                      name="type"
+                      value={meetingForm.type}
+                      onChange={handleMeetingFormChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    >
+                      <option value="Progress Review">Progress Review</option>
+                      <option value="Technical Guidance">Technical Guidance</option>
+                      <option value="Project Planning">Project Planning</option>
+                      <option value="Code Review">Code Review</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Description (Optional)
+                    </label>
+                    <textarea
+                      name="description"
+                      value={meetingForm.description}
+                      onChange={handleMeetingFormChange}
+                      rows="3"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Add meeting agenda or notes..."
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end space-x-3 mt-6">
+                  <button
+                    type="button"
+                    onClick={() => setShowScheduleModal(false)}
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Schedule Meeting
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reschedule Meeting Modal */}
+      {showRescheduleModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-xl font-semibold">Reschedule Meeting</h2>
+                <button
+                  onClick={() => {
+                    setShowRescheduleModal(false);
+                    setSelectedMeeting(null);
+                  }}
+                  className="p-2 hover:bg-gray-100 rounded-full"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <form onSubmit={handleScheduleMeeting} className="p-4">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Team
+                    </label>
+                    <input
+                      type="text"
+                      value={meetingForm.team}
+                      className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md"
+                      disabled
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      New Date
+                    </label>
+                    <input
+                      type="date"
+                      name="date"
+                      value={meetingForm.date}
+                      onChange={handleMeetingFormChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        New Start Time
+                      </label>
+                      <input
+                        type="time"
+                        name="startTime"
+                        value={meetingForm.startTime}
+                        onChange={handleMeetingFormChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        New End Time
+                      </label>
+                      <input
+                        type="time"
+                        name="endTime"
+                        value={meetingForm.endTime}
+                        onChange={handleMeetingFormChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Reason for Rescheduling
+                    </label>
+                    <textarea
+                      name="description"
+                      value={meetingForm.description}
+                      onChange={handleMeetingFormChange}
+                      rows="3"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Provide a reason for rescheduling..."
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end space-x-3 mt-6">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowRescheduleModal(false);
+                      setSelectedMeeting(null);
+                    }}
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Reschedule Meeting
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

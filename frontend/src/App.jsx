@@ -115,6 +115,14 @@ function App() {
               }
             />
             <Route
+              path="/mentor/teams"
+              element={
+                <ProtectedMentorRoute>
+                  <MentorDashboard activeTab="teams" />
+                </ProtectedMentorRoute>
+              }
+            />
+            <Route
               path="/mentor/team/:teamId"
               element={
                 <ProtectedMentorRoute>
