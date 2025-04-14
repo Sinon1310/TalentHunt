@@ -1,0 +1,49 @@
+.tests-list {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tests-list h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.tests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.test-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.test-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.test-card h2 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.test-card p {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.test-info {
+    display: flex;
+    justify-content: space-between;
+    color: #888;
+    font-size: 14px;
+} 

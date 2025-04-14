@@ -1,25 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { User, Mail, Lock, ChevronLeft, Save, X, Plus, Edit2 } from 'lucide-react';
+import axios from 'axios';
 
 const ProfileSettings = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showSkillModal, setShowSkillModal] = useState(false);
+  const [showInterestModal, setShowInterestModal] = useState(false);
   
-  // Sample user data - in a real app, this would be fetched from an API
   const [userData, setUserData] = useState({
-    name: 'Sinon Rodrigues',
-    email: 'sinonrodrigues@gmail.com',
-    role: 'Student',
-    department: 'Computer Science',
-    bio: 'Final year computer science student with a passion for web development and AI. Looking to collaborate on innovative projects.',
-    skills: ['React', 'JavaScript', 'Node.js', 'UI/UX Design', 'Python', 'Django'],
-    education: 'Bachelor of Science in Computer Science',
-    interests: ['Web Development', 'Artificial Intelligence', 'Mobile Apps'],
-    contactEmail: 'sinonrodrigues@gmail.com',
-    phone: '+91 9004750924',
-    github: 'github.com/sinon1310',
-    linkedin: 'linkedin.com/in/sinonrodrigues', 
+    name: '',
+    email: '',
+    role: '',
+    department: '',
+    bio: '',
+    skills: [],
+    education: '',
+    interests: [],
+    contactEmail: '',
+    phone: '',
+    github: '',
+    linkedin: '',
     notificationPreferences: {
       teamRequests: true,
       mentorMessages: true,
@@ -28,62 +32,320 @@ const ProfileSettings = () => {
     }
   });
   
-  const [newSkill, setNewSkill] = useState('');
-  const [newInterest, setNewInterest] = useState('');
-  
-  const handleProfileUpdate = (e) => {
-    e.preventDefault();
-    // In a real app, this would send data to an API
-    console.log('Updated profile:', userData);
-    setIsEditing(false);
-    alert('Profile updated successfully! (This is a demo)');
-  };
-  
-  const handleAddSkill = (e) => {
-    e.preventDefault();
-    if (newSkill.trim() !== '' && !userData.skills.includes(newSkill.trim())) {
-      setUserData({
-        ...userData,
-        skills: [...userData.skills, newSkill.trim()]
-      });
-      setNewSkill('');
-    }
-  };
-  
-  const handleRemoveSkill = (skillToRemove) => {
-    setUserData({
-      ...userData,
-      skills: userData.skills.filter(skill => skill !== skillToRemove)
-    });
-  };
-  
-  const handleAddInterest = (e) => {
-    e.preventDefault();
-    if (newInterest.trim() !== '' && !userData.interests.includes(newInterest.trim())) {
-      setUserData({
-        ...userData,
-        interests: [...userData.interests, newInterest.trim()]
-      });
-      setNewInterest('');
-    }
-  };
-  
-  const handleRemoveInterest = (interestToRemove) => {
-    setUserData({
-      ...userData,
-      interests: userData.interests.filter(interest => interest !== interestToRemove)
-    });
-  };
-  
-  const handleNotificationChange = (setting) => {
-    setUserData({
-      ...userData,
-      notificationPreferences: {
-        ...userData.notificationPreferences,
-        [setting]: !userData.notificationPreferences[setting]
+  const [newSkill, setNewSkill] = useState({ name: '', level: 'beginner' });
+  const [newInterest, setNewInterest] = useState({ 
+    name: '', 
+    category: 'technical',
+    level: 'curious',
+    description: ''
+  });
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        axios.defaults.baseURL = 'http://localhost:5002';
+        axios.defaults.withCredentials = true;
+
+        const response = await axios.get('/profile');
+        setUserData(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        setError(error.response?.data?.error || 'Failed to load profile');
+        setLoading(false);
       }
-    });
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  const handleAddSkill = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('/profile/skills', newSkill);
+      setUserData({
+        ...userData,
+        skills: [...userData.skills, response.data]
+      });
+      setNewSkill({ name: '', level: 'beginner' });
+      setShowSkillModal(false);
+    } catch (error) {
+      console.error('Error adding skill:', error);
+      alert(error.response?.data?.error || 'Failed to add skill');
+    }
   };
+
+  const handleRemoveSkill = async (skillId) => {
+    try {
+      await axios.delete(`/profile/skills/${skillId}`);
+      setUserData({
+        ...userData,
+        skills: userData.skills.filter(skill => skill._id !== skillId)
+      });
+    } catch (error) {
+      console.error('Error removing skill:', error);
+      alert(error.response?.data?.error || 'Failed to remove skill');
+    }
+  };
+
+  const handleAddInterest = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('/profile/interests', newInterest);
+      setUserData({
+        ...userData,
+        interests: [...userData.interests, response.data]
+      });
+      setNewInterest({ 
+        name: '', 
+        category: 'technical',
+        level: 'curious',
+        description: ''
+      });
+      setShowInterestModal(false);
+    } catch (error) {
+      console.error('Error adding interest:', error);
+      alert(error.response?.data?.error || 'Failed to add interest');
+    }
+  };
+
+  const handleRemoveInterest = async (interestId) => {
+    try {
+      await axios.delete(`/profile/interests/${interestId}`);
+      setUserData({
+        ...userData,
+        interests: userData.interests.filter(interest => interest._id !== interestId)
+      });
+    } catch (error) {
+      console.error('Error removing interest:', error);
+      alert(error.response?.data?.error || 'Failed to remove interest');
+    }
+  };
+
+  // Modal Components
+  const SkillModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-96">
+        <h3 className="text-lg font-semibold mb-4">Add New Skill</h3>
+        <form onSubmit={handleAddSkill}>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Skill Name</label>
+              <input
+                type="text"
+                value={newSkill.name}
+                onChange={(e) => setNewSkill({...newSkill, name: e.target.value})}
+                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Skill Level</label>
+              <select
+                value={newSkill.level}
+                onChange={(e) => setNewSkill({...newSkill, level: e.target.value})}
+                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
+              >
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+                <option value="expert">Expert</option>
+              </select>
+            </div>
+            <div className="flex justify-end space-x-3">
+              <button
+                type="button"
+                onClick={() => setShowSkillModal(false)}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                Add Skill
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+
+  const InterestModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-96">
+        <h3 className="text-lg font-semibold mb-4">Add New Interest</h3>
+        <form onSubmit={handleAddInterest}>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Interest Name</label>
+              <input
+                type="text"
+                value={newInterest.name}
+                onChange={(e) => setNewInterest({...newInterest, name: e.target.value})}
+                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Category</label>
+              <select
+                value={newInterest.category}
+                onChange={(e) => setNewInterest({...newInterest, category: e.target.value})}
+                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
+              >
+                <option value="technical">Technical</option>
+                <option value="business">Business</option>
+                <option value="design">Design</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Level</label>
+              <select
+                value={newInterest.level}
+                onChange={(e) => setNewInterest({...newInterest, level: e.target.value})}
+                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
+              >
+                <option value="curious">Curious</option>
+                <option value="hobbyist">Hobbyist</option>
+                <option value="enthusiast">Enthusiast</option>
+                <option value="passionate">Passionate</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Description (Optional)</label>
+              <textarea
+                value={newInterest.description}
+                onChange={(e) => setNewInterest({...newInterest, description: e.target.value})}
+                className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
+                rows="3"
+              />
+            </div>
+            <div className="flex justify-end space-x-3">
+              <button
+                type="button"
+                onClick={() => setShowInterestModal(false)}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                Add Interest
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-xl text-gray-600">Loading profile...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center space-y-4">
+        <div className="text-xl text-red-600">{error}</div>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  // Skills & Interests Tab Content
+  const SkillsAndInterestsContent = () => (
+    <div className="space-y-8">
+      {/* Skills Section */}
+      <div>
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-xl font-semibold text-gray-800">Skills</h3>
+          <button
+            onClick={() => setShowSkillModal(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            <Plus size={18} />
+            <span>Add Skill</span>
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {userData.skills.map((skill) => (
+            <div
+              key={skill._id}
+              className="bg-white rounded-lg shadow p-4 flex justify-between items-center"
+            >
+              <div>
+                <h4 className="font-medium text-gray-800">{skill.name}</h4>
+                <p className="text-sm text-gray-500 capitalize">{skill.level}</p>
+              </div>
+              <button
+                onClick={() => handleRemoveSkill(skill._id)}
+                className="text-gray-400 hover:text-red-600"
+              >
+                <X size={18} />
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Interests Section */}
+      <div>
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-xl font-semibold text-gray-800">Interests</h3>
+          <button
+            onClick={() => setShowInterestModal(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+          >
+            <Plus size={18} />
+            <span>Add Interest</span>
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {userData.interests.map((interest) => (
+            <div
+              key={interest._id}
+              className="bg-white rounded-lg shadow p-4"
+            >
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <h4 className="font-medium text-gray-800">{interest.name}</h4>
+                  <p className="text-sm text-gray-500">
+                    {interest.category} • {interest.level}
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleRemoveInterest(interest._id)}
+                  className="text-gray-400 hover:text-red-600"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              {interest.description && (
+                <p className="text-sm text-gray-600 mt-2">{interest.description}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -387,133 +649,11 @@ const ProfileSettings = () => {
             
             {/* Skills & Interests Tab */}
             {activeTab === 'skills' && (
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">Skills & Interests</h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Skills Section */}
-                  <div>
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-lg font-semibold text-gray-800">Skills</h3>
-                    </div>
-                    
-                    <div className="mb-4">
-                      <form onSubmit={handleAddSkill} className="flex">
-                        <input
-                          type="text"
-                          placeholder="Add a new skill"
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          value={newSkill}
-                          onChange={(e) => setNewSkill(e.target.value)}
-                        />
-                        <button
-                          type="submit"
-                          className="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700 transition"
-                        >
-                          <Plus size={18} />
-                        </button>
-                      </form>
-                    </div>
-                    
-                    <div className="flex flex-wrap gap-2">
-                      {userData.skills.map((skill, index) => (
-                        <div key={index} className="flex items-center bg-blue-100 text-blue-800 rounded-full px-3 py-1">
-                          <span className="text-sm">{skill}</span>
-                          <button
-                            className="ml-2 text-blue-600 hover:text-blue-800"
-                            onClick={() => handleRemoveSkill(skill)}
-                          >
-                            <X size={14} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    <div className="mt-6">
-                      <h4 className="text-sm font-medium text-gray-700 mb-2">Suggested Skills</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {['TypeScript', 'MongoDB', 'Express', 'AWS', 'Docker'].map((skill, index) => (
-                          !userData.skills.includes(skill) && (
-                            <button
-                              key={index}
-                              className="bg-gray-100 text-gray-800 rounded-full px-3 py-1 text-sm hover:bg-gray-200"
-                              onClick={() => {
-                                setUserData({
-                                  ...userData,
-                                  skills: [...userData.skills, skill]
-                                });
-                              }}
-                            >
-                              + {skill}
-                            </button>
-                          )
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Interests Section */}
-                  <div>
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-lg font-semibold text-gray-800">Interests</h3>
-                    </div>
-                    
-                    <div className="mb-4">
-                      <form onSubmit={handleAddInterest} className="flex">
-                        <input
-                          type="text"
-                          placeholder="Add a new interest"
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          value={newInterest}
-                          onChange={(e) => setNewInterest(e.target.value)}
-                        />
-                        <button
-                          type="submit"
-                          className="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700 transition"
-                        >
-                          <Plus size={18} />
-                        </button>
-                      </form>
-                    </div>
-                    
-                    <div className="flex flex-wrap gap-2">
-                      {userData.interests.map((interest, index) => (
-                        <div key={index} className="flex items-center bg-purple-100 text-purple-800 rounded-full px-3 py-1">
-                          <span className="text-sm">{interest}</span>
-                          <button
-                            className="ml-2 text-purple-600 hover:text-purple-800"
-                            onClick={() => handleRemoveInterest(interest)}
-                          >
-                            <X size={14} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    <div className="mt-6">
-                      <h4 className="text-sm font-medium text-gray-700 mb-2">Suggested Interests</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {['Data Science', 'Blockchain', 'Game Development', 'Cybersecurity', 'IoT'].map((interest, index) => (
-                          !userData.interests.includes(interest) && (
-                            <button
-                              key={index}
-                              className="bg-gray-100 text-gray-800 rounded-full px-3 py-1 text-sm hover:bg-gray-200"
-                              onClick={() => {
-                                setUserData({
-                                  ...userData,
-                                  interests: [...userData.interests, interest]
-                                });
-                              }}
-                            >
-                              + {interest}
-                            </button>
-                          )
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <>
+                <SkillsAndInterestsContent />
+                {showSkillModal && <SkillModal />}
+                {showInterestModal && <InterestModal />}
+              </>
             )}
             
             {/* Settings Tab */}
