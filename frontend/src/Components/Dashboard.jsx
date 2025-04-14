@@ -1,73 +1,188 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Users, Calendar, MessageSquare, Award, Search, Bell, ChevronDown, User } from 'lucide-react';
+import { Users, Calendar, MessageSquare, Award, Search, Bell, ChevronDown, User, X } from 'lucide-react';
+import Sidebar from './Sidebar';
+import { useUser } from '../Contexts/UserContext';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showReplyModal, setShowReplyModal] = useState(false);
+  const [replyMessage, setReplyMessage] = useState('');
+  const [selectedMentor, setSelectedMentor] = useState(null);
   const navigate = useNavigate();
+  const { user, logout } = useUser();
+
+  // Handle logout
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   // Sample data - in a real app, this would come from an API
-  const upcomingCompetitions = [
+  const [upcomingCompetitions] = useState([
     {
       id: 1,
       title: "Annual Hackathon 2025",
-      date: "Oct 15-17, 2025",
-      status: "Registered",
-      teamMembers: 3,
-      mentorAssigned: true
+      description: "Build innovative solutions for real-world problems in 48 hours",
+      date: "October 15-17, 2025",
+      status: "Upcoming",
+      participants: 48,
+      image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80",
+      bgColor: "from-blue-600 to-indigo-700"
     },
     {
       id: 2,
       title: "Design Challenge",
-      date: "Nov 5-7, 2025",
-      status: "Team Incomplete",
-      teamMembers: 2,
-      mentorAssigned: false
+      description: "Create innovative and user-centered designs for next-generation applications",
+      date: "November 5-7, 2025",
+      status: "Open",
+      participants: 32,
+      image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80",
+      bgColor: "from-purple-600 to-pink-600"
     }
-  ];
+  ]);
   
-  const teamRequests = [
+  const [teamRequests, setTeamRequests] = useState([
     {
       id: 1,
       name: "Sarah Dmello",
       role: "UI/UX Designer",
       skills: ["Figma", "User Research", "Prototyping"],
-      competition: "Design Challenge"
+      competition: "Design Challenge",
+      avatar: null,
+      status: 'pending'
     },
     {
       id: 2,
       name: "Michael Johnson",
       role: "Backend Developer",
       skills: ["Node.js", "MongoDB", "Express"],
-      competition: "Annual Hackathon 2025"
+      competition: "Annual Hackathon 2025",
+      avatar: null,
+      status: 'pending'
     }
-  ];
+  ]);
   
-  const mentorMessages = [
+  const [mentorMessages, setMentorMessages] = useState([
     {
       id: 1,
       mentor: "Dr. Joseph",
       message: "I've reviewed your project proposal. Let's schedule a meeting to discuss the technical approach.",
-      time: "2 hours ago"
+      time: "2 hours ago",
+      avatar: null,
+      replied: false
     },
     {
       id: 2,
       mentor: "Prof. Prachi Patil",
       message: "Your team's progress looks good. I've shared some resources that might help with the UI design.",
-      time: "Yesterday"
+      time: "Yesterday",
+      avatar: null,
+      replied: false
     }
-  ];
+  ]);
+
+  // Handler for team request actions
+  const handleTeamRequest = (requestId, action) => {
+    setTeamRequests(prevRequests =>
+      prevRequests.map(request =>
+        request.id === requestId
+          ? { ...request, status: action }
+          : request
+      )
+    );
+
+    // Show notification (you can replace this with your preferred notification system)
+    const request = teamRequests.find(r => r.id === requestId);
+    alert(`${action === 'accepted' ? 'Accepted' : 'Declined'} team request from ${request.name}`);
+  };
+
+  // Handler for mentor message replies
+  const handleReplySubmit = (e) => {
+    e.preventDefault();
+    if (!replyMessage.trim()) return;
+
+    setMentorMessages(prevMessages =>
+      prevMessages.map(message =>
+        message.id === selectedMentor.id
+          ? { ...message, replied: true }
+          : message
+      )
+    );
+
+    // In a real app, you would send this to an API
+    console.log(`Replying to ${selectedMentor.mentor}: ${replyMessage}`);
+    
+    // Reset the form
+    setReplyMessage('');
+    setShowReplyModal(false);
+    setSelectedMentor(null);
+
+    // Show notification
+    alert('Reply sent successfully!');
+  };
+
+  // Modal for replying to mentor messages
+  const ReplyModal = () => {
+    if (!showReplyModal || !selectedMentor) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+          <div className="flex justify-between items-start mb-4">
+            <h3 className="text-lg font-bold">Reply to {selectedMentor.mentor}</h3>
+            <button 
+              onClick={() => setShowReplyModal(false)}
+              className="p-1 hover:bg-gray-100 rounded-full"
+            >
+              <X size={20} className="text-gray-500" />
+            </button>
+          </div>
+          
+          <div className="mb-4">
+            <p className="text-sm text-gray-600">{selectedMentor.message}</p>
+          </div>
+
+          <form onSubmit={handleReplySubmit}>
+            <textarea
+              value={replyMessage}
+              onChange={(e) => setReplyMessage(e.target.value)}
+              placeholder="Type your reply..."
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px]"
+            />
+            <div className="flex justify-end mt-4 space-x-2">
+              <button
+                type="button"
+                onClick={() => setShowReplyModal(false)}
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700"
+              >
+                Send Reply
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-white/80 backdrop-blur-md shadow-lg fixed top-0 left-0 right-0 z-10">
         <div className="container mx-auto px-4 py-3">
           <div className="flex justify-between items-center">
             {/* Logo */}
             <button onClick={() => navigate('/dashboard')} className="flex items-center space-x-2 focus:outline-none">
-            <div className="text-2xl font-bold text-blue-600">TalentHunt</div>
-
+              <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                TalentHunt
+              </div>
             </button>
             
             {/* Search */}
@@ -79,7 +194,7 @@ const Dashboard = () => {
                 <input
                   type="text"
                   placeholder="Search for competitions, teammates..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
                 />
               </div>
             </div>
@@ -88,7 +203,7 @@ const Dashboard = () => {
             <div className="flex items-center space-x-4">
               <button className="relative p-2 text-gray-600 hover:text-blue-600 focus:outline-none">
                 <Bell size={20} />
-                <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
+                <span className="absolute top-0 right-0 h-4 w-4 bg-gradient-to-r from-red-500 to-pink-500 rounded-full text-xs text-white flex items-center justify-center">
                   3
                 </span>
               </button>
@@ -98,25 +213,33 @@ const Dashboard = () => {
                   className="flex items-center space-x-2 focus:outline-none"
                   onClick={() => setShowProfileMenu(!showProfileMenu)}
                 >
-                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                    <User size={18} className="text-blue-600" />
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center">
+                    {user?.profileImage ? (
+                      <img 
+                        src={user.profileImage} 
+                        alt={user.name} 
+                        className="w-full h-full rounded-full object-cover"
+                      />
+                    ) : (
+                      <User size={18} className="text-white" />
+                    )}
                   </div>
-                  <span className="hidden md:inline-block font-medium">Sinon Rodrigues</span>
+                  <span className="hidden md:inline-block font-medium">{user?.name || 'User'}</span>
                   <ChevronDown size={16} className="text-gray-500" />
                 </button>
                 
                 {showProfileMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                  <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    Your Profile
-                  </Link>
-                    <Link to="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Settings
+                  <div className="absolute right-0 mt-2 w-48 bg-white/80 backdrop-blur-md rounded-lg shadow-lg py-1 z-10">
+                    <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">
+                      Your Profile
                     </Link>
                     <div className="border-t border-gray-100 my-1"></div>
-                    <Link to="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
+                    >
                       Sign out
-                    </Link>
+                    </button>
                   </div>
                 )}
               </div>
@@ -126,152 +249,78 @@ const Dashboard = () => {
       </header>
       
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row gap-8">
+      <main className="pt-16">
+        <div className="container mx-auto px-4 py-8 flex">
           {/* Sidebar */}
-          <div className="md:w-64 flex-shrink-0">
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <nav className="space-y-1">
-                <button
-                  className={`w-full flex items-center space-x-3 px-3 py-2 rounded-md ${
-                    activeTab === 'overview' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'
-                  }`}
-                  onClick={() => setActiveTab('overview')}
-                >
-                  <Users size={20} />
-                  <span>Overview</span>
-                </button>
-                <button
-                  className={`w-full flex items-center space-x-3 px-3 py-2 rounded-md ${
-                    activeTab === 'competitions' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'
-                  }`}
-                  onClick={() => setActiveTab('competitions')}
-                >
-                  <Award size={20} />
-                  <span>Competitions</span>
-                </button>
-                <button
-                  className={`w-full flex items-center space-x-3 px-3 py-2 rounded-md ${
-                    activeTab === 'teams' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'
-                  }`}
-                  onClick={() => setActiveTab('teams')}
-                >
-                  <Users size={20} />
-                  <span>My Teams</span>
-                </button>
-                <button
-                  className={`w-full flex items-center space-x-3 px-3 py-2 rounded-md ${
-                    activeTab === 'mentorship' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'
-                  }`}
-                  onClick={() => setActiveTab('mentorship')}
-                >
-                  <MessageSquare size={20} />
-                  <span>Mentorship</span>
-                </button>
-                <button
-                  className={`w-full flex items-center space-x-3 px-3 py-2 rounded-md ${
-                    activeTab === 'calendar' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'
-                  }`}
-                  onClick={() => setActiveTab('calendar')}
-                >
-                  <Calendar size={20} />
-                  <span>Calendar</span>
-                </button>
-              </nav>
-            </div>
+          <div className="w-64 flex-shrink-0 hidden md:block">
+            <Sidebar />
           </div>
           
           {/* Main Dashboard Content */}
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard</h1>
+          <div className="flex-1 ml-0 md:ml-8">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 mb-8 text-white shadow-lg">
+              <h1 className="text-3xl font-bold mb-2">Welcome Back, {user?.name || 'User'}!</h1>
+              <p className="text-blue-100">Ready to showcase your talent?</p>
+            </div>
             
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-white rounded-lg shadow-sm p-6">
+              <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-6 transform transition-all hover:scale-105 hover:shadow-xl border border-gray-100">
                 <div className="flex items-center">
-                  <div className="bg-blue-100 p-3 rounded-full">
-                    <Award size={24} className="text-blue-600" />
+                  <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-xl shadow-lg">
+                    <Award size={24} className="text-white" />
                   </div>
                   <div className="ml-4">
-                    <h2 className="text-sm font-medium text-gray-500">Active Competitions</h2>
-                    <p className="text-2xl font-semibold text-gray-800">2</p>
+                    <h2 className="text-sm font-medium text-gray-600">Active Competitions</h2>
+                    <p className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">2</p>
                   </div>
                 </div>
               </div>
               
-              <div className="bg-white rounded-lg shadow-sm p-6">
+              <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-6 transform transition-all hover:scale-105 hover:shadow-xl border border-gray-100">
                 <div className="flex items-center">
-                  <div className="bg-green-100 p-3 rounded-full">
-                    <Users size={24} className="text-green-600" />
+                  <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-3 rounded-xl shadow-lg">
+                    <Users size={24} className="text-white" />
                   </div>
                   <div className="ml-4">
-                    <h2 className="text-sm font-medium text-gray-500">Team Requests</h2>
-                    <p className="text-2xl font-semibold text-gray-800">5</p>
+                    <h2 className="text-sm font-medium text-gray-600">Team Requests</h2>
+                    <p className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">5</p>
                   </div>
                 </div>
               </div>
               
-              <div className="bg-white rounded-lg shadow-sm p-6">
+              <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-6 transform transition-all hover:scale-105 hover:shadow-xl border border-gray-100">
                 <div className="flex items-center">
-                  <div className="bg-purple-100 p-3 rounded-full">
-                    <MessageSquare size={24} className="text-purple-600" />
+                  <div className="bg-gradient-to-br from-purple-500 to-pink-600 p-3 rounded-xl shadow-lg">
+                    <MessageSquare size={24} className="text-white" />
                   </div>
                   <div className="ml-4">
-                    <h2 className="text-sm font-medium text-gray-500">Mentor Messages</h2>
-                    <p className="text-2xl font-semibold text-gray-800">3</p>
+                    <h2 className="text-sm font-medium text-gray-600">Mentor Messages</h2>
+                    <p className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">3</p>
                   </div>
                 </div>
               </div>
             </div>
             
-            {/* Upcoming Competitions */}
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold text-gray-800">Upcoming Competitions</h2>
-                <Link to="/competitions" className="text-sm text-blue-600 hover:text-blue-700">
-                  View All
-                </Link>
-              </div>
-              
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Competition
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Date
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Team
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Mentor
-                      </th>
-                      <th scope="col" className="relative px-6 py-3">
-                        <span className="sr-only">Actions</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {upcomingCompetitions.map((competition) => (
-                      <tr key={competition.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">{competition.title}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-500">{competition.date}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            competition.status === 'Registered' 
-                              ? 'bg-green-100 text-green-800' 
-                              : 'bg-yellow-100 text-yellow-800'
-                          }`}>
+            {/* Competition Cards */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-4">
+                Upcoming Competitions
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {upcomingCompetitions.map((competition) => (
+                  <div key={competition.id} className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg overflow-hidden transform transition-all hover:scale-105 hover:shadow-xl border border-gray-100">
+                    <div className="relative h-48">
+                      <div className={`absolute inset-0 bg-gradient-to-r ${competition.bgColor} opacity-90`}></div>
+                      <img 
+                        src={competition.image} 
+                        alt={competition.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                        <h3 className="text-xl font-bold text-white mb-1">{competition.title}</h3>
+                        <div className="flex items-center space-x-3">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm">
                             {competition.status}
                           </span>
                         </div>
@@ -306,22 +355,28 @@ const Dashboard = () => {
             {/* Team Requests and Mentor Messages */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Team Requests */}
-              <div className="bg-white rounded-lg shadow-sm p-6">
+              <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-6 border border-gray-100">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-semibold text-gray-800">Team Requests</h2>
-                  <Link to="/teams/requests" className="text-sm text-blue-600 hover:text-blue-700">
-                   View All
-               </Link>
-
+                  <h2 className="text-lg font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                    Team Requests
+                  </h2>
+                  {/* <Link to="/teams/requests" className="text-sm text-blue-600 hover:text-blue-700">
+                    View All
+                  </Link> */}
                 </div>
                 
                 <div className="space-y-4">
                   {teamRequests.map((request) => (
-                    <div key={request.id} className="border border-gray-200 rounded-md p-4">
+                    <div key={request.id} className="border border-gray-200 rounded-xl p-4 hover:shadow-lg transition-all bg-white/50">
                       <div className="flex justify-between">
-                        <div>
-                          <h3 className="font-medium text-gray-900">{request.name}</h3>
-                          <p className="text-sm text-gray-500">{request.role}</p>
+                        <div className="flex items-center">
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shadow-md">
+                            <User size={20} className="text-white" />
+                          </div>
+                          <div className="ml-3">
+                            <h3 className="font-medium text-gray-900">{request.name}</h3>
+                            <p className="text-sm text-gray-500">{request.role}</p>
+                          </div>
                         </div>
                         <div className="text-xs text-gray-500">
                           For: {request.competition}
@@ -329,45 +384,82 @@ const Dashboard = () => {
                       </div>
                       <div className="mt-2 flex flex-wrap gap-1">
                         {request.skills.map((skill, index) => (
-                          <span key={index} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                          <span key={index} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                             {skill}
                           </span>
                         ))}
                       </div>
-                      <div className="mt-3 flex space-x-2">
-                        <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
-                          Accept
-                        </button>
-                        <button className="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded hover:bg-gray-50">
-                          Decline
-                        </button>
-                      </div>
+                      {request.status === 'pending' ? (
+                        <div className="mt-3 flex space-x-2">
+                          <button 
+                            onClick={() => handleTeamRequest(request.id, 'accepted')}
+                            className="px-4 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
+                          >
+                            Accept
+                          </button>
+                          <button 
+                            onClick={() => handleTeamRequest(request.id, 'declined')}
+                            className="px-4 py-1.5 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-all"
+                          >
+                            Decline
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="mt-3">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            request.status === 'accepted' 
+                              ? 'bg-green-100 text-green-800' 
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {request.status === 'accepted' ? 'Accepted' : 'Declined'}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
               </div>
               
               {/* Mentor Messages */}
-              <div className="bg-white rounded-lg shadow-sm p-6">
+              <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-6 border border-gray-100">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-semibold text-gray-800">Mentor Messages</h2>
-                  <Link to="/mentorship/messages" className="text-sm text-blue-600 hover:text-blue-700">
+                  <h2 className="text-lg font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                    Mentor Messages
+                  </h2>
+                  {/* <Link to="/mentorship/messages" className="text-sm text-blue-600 hover:text-blue-700">
                     View All
-                  </Link>
+                  </Link> */}
                 </div>
                 
                 <div className="space-y-4">
                   {mentorMessages.map((message) => (
-                    <div key={message.id} className="border border-gray-200 rounded-md p-4">
-                      <div className="flex justify-between">
-                        <h3 className="font-medium text-gray-900">{message.mentor}</h3>
-                        <span className="text-xs text-gray-500">{message.time}</span>
-                      </div>
-                      <p className="mt-1 text-sm text-gray-600">{message.message}</p>
-                      <div className="mt-3">
-                        <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
-                          Reply
-                        </button>
+                    <div key={message.id} className="border border-gray-200 rounded-xl p-4 hover:shadow-lg transition-all bg-white/50">
+                      <div className="flex items-start">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-md">
+                          <User size={20} className="text-white" />
+                        </div>
+                        <div className="flex-1 ml-3">
+                          <div className="flex justify-between items-start">
+                            <h3 className="font-medium text-gray-900">{message.mentor}</h3>
+                            <span className="text-xs text-gray-500">{message.time}</span>
+                          </div>
+                          <p className="mt-1 text-sm text-gray-600">{message.message}</p>
+                          {!message.replied ? (
+                            <button 
+                              onClick={() => {
+                                setSelectedMentor(message);
+                                setShowReplyModal(true);
+                              }}
+                              className="mt-3 px-4 py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-md hover:shadow-lg"
+                            >
+                              Reply
+                            </button>
+                          ) : (
+                            <span className="mt-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                              Replied
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -377,6 +469,9 @@ const Dashboard = () => {
           </div>
         </div>
       </main>
+
+      {/* Reply Modal */}
+      <ReplyModal />
     </div>
   );
 };
