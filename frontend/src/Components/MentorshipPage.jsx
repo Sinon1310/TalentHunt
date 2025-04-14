@@ -186,12 +186,12 @@ const MentorshipPage = () => {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800">Find Your Mentor</h1>
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-500">Sort by:</span>
+              {/* <span className="text-sm text-gray-500">Sort by:</span>
               <select className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 <option value="rating">Rating</option>
                 <option value="experience">Experience</option>
                 <option value="reviews">Reviews</option>
-              </select>
+              </select> */}
             </div>
           </div>
 

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ChevronLeft, User, MessageSquare, Plus, X, Edit2, CheckCircle, Clock, AlertCircle, Award, Calendar, Users, Trash2 } from 'lucide-react';
 import TeamChat from './TeamChat';
+import VideoMeeting from './VideoMeeting';
 
 const TeamManagement = () => {
   const { id } = useParams(); // Get team ID from URL parameters
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [showChat, setShowChat] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
@@ -185,6 +187,13 @@ const TeamManagement = () => {
   // Get team data based on ID
   const [teamData, setTeamData] = useState(teamsData[id] || teamsData["101"]);
 
+  const handleViewCompetition = () => {
+    if (teamData && teamData.competitionId) {
+      console.log('Navigating to competition:', teamData.competitionId);
+      navigate(`/competitions/${teamData.competitionId}`, { replace: true });
+    }
+  };
+
   // Add useEffect to fetch team data based on ID
   useEffect(() => {
     // Update team data when ID changes
@@ -344,21 +353,27 @@ const TeamManagement = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex justify-between items-center">
-            <div className="text-2xl font-bold text-blue-600">TalentHunt</div>
-            
-            {/* User Menu */}
-            <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                <User size={18} className="text-blue-600" />
-              </div>
-            </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center text-gray-600 hover:text-gray-900"
+            >
+              <ChevronLeft className="w-5 h-5" />
+              <span className="ml-1">Back</span>
+            </button>
+            <h1 className="text-2xl font-bold text-gray-900">{teamData?.name}</h1>
           </div>
+          <button
+            onClick={handleViewCompetition}
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            <Award className="w-4 h-4 mr-2" />
+            View Competition
+          </button>
         </div>
-      </header>
+      </div>
       
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
@@ -378,14 +393,18 @@ const TeamManagement = () => {
               <p className="text-gray-600">Competition: {teamData.competition}</p>
             </div>
             <div className="mt-4 md:mt-0 flex space-x-3">
+              <VideoMeeting teamId={teamData.id} competitionId={teamData.competitionId} />
               <button 
                 onClick={() => setShowChat(true)}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center"
               >
-                <MessageSquare size={18} className="mr-2" />
+                <MessageSquare className="w-5 h-5 mr-2" />
                 Team Chat
               </button>
-              <Link to={`/competition/${teamData.competitionId}`} className="px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition">
+              <Link
+                to={`/competitions/${teamData.competitionId}`}
+                className="px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition"
+              >
                 View Competition
               </Link>
             </div>
@@ -948,7 +967,7 @@ const TeamManagement = () => {
             </div>
           )}
           
-          {/* Resources Tab */}
+          Resources Tab
           {activeTab === 'resources' && (
             <div>
               <h2 className="text-xl font-semibold text-gray-800 mb-6">Team Resources</h2>

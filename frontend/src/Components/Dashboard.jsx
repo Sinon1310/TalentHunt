@@ -340,7 +340,7 @@ const Dashboard = () => {
                           </div>
                         </div>
                         <Link
-                          to={`/competition/${competition.id}`}
+                          to={`/competitions/${competition.id}`}
                           className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
                         >
                           View Details

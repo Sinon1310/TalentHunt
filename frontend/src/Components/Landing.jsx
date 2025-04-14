@@ -294,24 +294,26 @@ const Landing = () => {
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
               >
                 {competitions.map((competition) => (
-                  <div key={competition.id} className="w-full flex-shrink-0">
-                    <div className="bg-white overflow-hidden">
-                      <div className="h-80 relative group">
-                        <img 
-                          src={competition.image} 
-                          alt={competition.title} 
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      </div>
-                      <div className="p-8">
-                        <h3 className="text-2xl font-semibold mb-4 text-gray-800">{competition.title}</h3>
-                        <p className="text-gray-600 mb-6 leading-relaxed">{competition.description}</p>
-                        <div className="flex justify-between items-center">
-                          <span className="text-blue-600 font-medium">{competition.date}</span>
-                          {/* <button className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                            Learn More
-                          </button> */}
+                  <div key={competition.id} className="flex-shrink-0 w-full">
+                    <div className="relative h-96">
+                      <img 
+                        src={competition.image} 
+                        alt={competition.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/20">
+                        <div className="absolute bottom-0 left-0 right-0 p-8">
+                          <h3 className="text-3xl font-bold text-white mb-2">{competition.title}</h3>
+                          <p className="text-gray-200 mb-4">{competition.description}</p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-300">{competition.date}</span>
+                            <button 
+                              onClick={() => navigate(`/competitions/${competition.id}`)}
+                              className="px-6 py-2 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition"
+                            >
+                              View Details
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>

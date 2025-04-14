@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Users, Calendar, Clock, MapPin, Award, User, FileText, ChevronLeft, MessageSquare, Share2, CheckCircle } from 'lucide-react';
+import { useUser } from '../Contexts/UserContext';
 
 const CompetitionDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate(); // Use navigate instead of window.location.href
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
+  const [isRegistered, setIsRegistered] = useState(false);
+  const { user } = useUser();
   
   // Sample teams data
   const teamsData = {
@@ -153,8 +156,7 @@ const CompetitionDetails = () => {
         { name: "Tech Innovation Club", role: "Student Organization" }
       ],
       registeredTeams: 12,
-      maxTeams: 20,
-      isRegistered: false
+      maxTeams: 20
     },
     2: {
       id: 2,
@@ -190,8 +192,7 @@ const CompetitionDetails = () => {
         { name: "Design Innovation Lab", role: "Host Organization" }
       ],
       registeredTeams: 8,
-      maxTeams: 15,
-      isRegistered: false
+      maxTeams: 15
     },
     3: {
       id: 3,
@@ -227,8 +228,7 @@ const CompetitionDetails = () => {
         { name: "AI Innovation Lab", role: "Host Organization" }
       ],
       registeredTeams: 5,
-      maxTeams: 15,
-      isRegistered: false
+      maxTeams: 15
     }
   };
 
@@ -239,6 +239,36 @@ const CompetitionDetails = () => {
 
   const competition = competitions[id];
   
+  // Handle registration
+  const handleRegister = () => {
+    if (!user) {
+      navigate('/auth', { state: { from: `/competitions/${id}` } });
+      return;
+    }
+    setIsRegistered(true);
+    // Here you would typically make an API call to register the user
+    alert('Successfully registered for the competition!');
+  };
+
+  // Handle team creation
+  const handleCreateTeam = () => {
+    if (!user) {
+      navigate('/auth', { state: { from: `/team/new/${id}` } });
+      return;
+    }
+    navigate(`/team/new/${id}`, { replace: true });
+  };
+
+  // Handle team join request
+  const handleJoinTeam = (teamId) => {
+    if (!user) {
+      navigate('/auth', { state: { from: `/competitions/${id}` } });
+      return;
+    }
+    // Here you would typically make an API call to send the join request
+    alert('Join request sent successfully!');
+  };
+
   // If competition not found, redirect to competitions page
   useEffect(() => {
     if (!competition) {
@@ -252,17 +282,6 @@ const CompetitionDetails = () => {
   }
 
   const teams = teamsData[id] || [];
-
-  // Function to handle team join request
-  const handleJoinTeam = (teamId) => {
-    alert('Join request sent to team!');
-    // Here you would typically make an API call to handle the join request
-  };
-
-  // Function to handle team creation
-  const handleCreateTeam = () => {
-    navigate(`/team/new/${id}`);
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -279,10 +298,10 @@ const CompetitionDetails = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-3 mt-4 md:mt-0">
-              {!competition.isRegistered ? (
+              {!isRegistered ? (
                 <button 
                   className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center font-medium"
-                  onClick={() => alert('Registration successful!')}
+                  onClick={handleRegister}
                 >
                   Register Now
                 </button>
@@ -515,7 +534,7 @@ const CompetitionDetails = () => {
                   <h3 className="text-xl font-semibold text-gray-800">Registered Teams</h3>
                   <button 
                     className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2 font-medium"
-                    onClick={() => navigate(`/team/create/${id}`)}
+                    onClick={handleCreateTeam}
                   >
                     <Users size={18} />
                     Create Team
@@ -529,7 +548,7 @@ const CompetitionDetails = () => {
                     <p className="text-sm text-gray-500 mb-4">Be the first to create a team!</p>
                     <button 
                       className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2 mx-auto font-medium"
-                      onClick={() => navigate(`/team/create/${id}`)}
+                      onClick={handleCreateTeam}
                     >
                       <Users size={18} />
                       Create Team

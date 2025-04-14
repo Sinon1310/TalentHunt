@@ -38,21 +38,15 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/admin" element={<AdminLogin />} />
+            <Route path="/competitions" element={<CompetitionsPage />} />
+            <Route path="/competitions/:id" element={<CompetitionDetails />} />
 
-            {/* General Protected Routes (requires login) */}
+            {/* Protected Routes */}
             <Route
               path="/dashboard"
               element={
                 <ProtectedRoute>
                   <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/competition/:id"
-              element={
-                <ProtectedRoute>
-                  <CompetitionDetails />
                 </ProtectedRoute>
               }
             />
@@ -65,6 +59,14 @@ function App() {
               }
             />
             <Route
+              path="/team/new/:id"
+              element={
+                <ProtectedRoute>
+                  <TeamCreate />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/manage-team/:id"
               element={
                 <ProtectedRoute>
@@ -73,18 +75,10 @@ function App() {
               }
             />
             <Route
-              path="/competitions"
+              path="/team/:id"
               element={
                 <ProtectedRoute>
-                  <CompetitionsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/team/create/:id"
-              element={
-                <ProtectedRoute>
-                  <TeamCreate />
+                  <TeamDetails />
                 </ProtectedRoute>
               }
             />
@@ -115,11 +109,19 @@ function App() {
               }
             />
             <Route
-              path="/mentor/team/:teamId"
+              path="/mentor/teams"
               element={
                 <ProtectedMentorRoute>
-                  <TeamDetails />
+                  <MentorDashboard activeTab="teams" />
                 </ProtectedMentorRoute>
+              }
+            />
+            <Route
+              path="/mentor/team/:teamId"
+              element={
+                <ProtectedRoute>
+                  <TeamDetails />
+                </ProtectedRoute>
               }
             />
 

@@ -93,7 +93,7 @@ const Competitions = () => {
 
                 {/* Action Button */}
                 <button 
-                  onClick={() => navigate(`/competition/${competition.id}`)}
+                  onClick={() => navigate(`/competitions/${competition.id}`)}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-medium hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center"
                 >
                   View Details
