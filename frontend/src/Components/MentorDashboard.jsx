@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Users, Calendar, MessageSquare, Award, Search, Bell, ChevronDown, User, CheckCircle, Clock, AlertCircle, X } from 'lucide-react';
+import { Users, Calendar, MessageSquare, Award, Search, Bell, ChevronDown, User, CheckCircle, Clock, AlertCircle, X } from 'lucide-react';
 import { useUser } from '../Contexts/UserContext';
 import VideoMeeting from './VideoMeeting';
 import FeedbackReview from './FeedbackReview';
 
 const MentorDashboard = ({ activeTab: initialActiveTab }) => {
+const MentorDashboard = ({ activeTab: initialActiveTab }) => {
   const { user, logout } = useUser();
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState(initialActiveTab || 'teams');
   const [activeTab, setActiveTab] = useState(initialActiveTab || 'teams');
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -429,9 +432,18 @@ const MentorDashboard = ({ activeTab: initialActiveTab }) => {
                         View All
                       </Link>
                     )}
+                    <h2 className="text-lg font-semibold text-gray-800">
+                      {isViewingAllTeams ? 'All Teams' : 'My Teams'}
+                    </h2>
+                    {!isViewingAllTeams && (
+                      <Link to="/mentor/teams" className="text-sm text-blue-600 hover:text-blue-700">
+                        View All
+                      </Link>
+                    )}
                   </div>
                   
                   <div className="space-y-6">
+                    {teamsToDisplay.map((team) => (
                     {teamsToDisplay.map((team) => (
                       <div key={team.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -577,6 +589,10 @@ const MentorDashboard = ({ activeTab: initialActiveTab }) => {
                       onClick={() => setShowScheduleModal(true)}
                       className="text-sm text-blue-600 hover:text-blue-700 flex items-center"
                     >
+                    <button 
+                      onClick={() => setShowScheduleModal(true)}
+                      className="text-sm text-blue-600 hover:text-blue-700 flex items-center"
+                    >
                       <Calendar size={16} className="mr-1" />
                       Schedule Meeting
                     </button>
@@ -608,8 +624,16 @@ const MentorDashboard = ({ activeTab: initialActiveTab }) => {
                               onClick={() => handleJoinMeeting(meeting)}
                               className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
                             >
+                            <button 
+                              onClick={() => handleJoinMeeting(meeting)}
+                              className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                            >
                               Join Meeting
                             </button>
+                            <button 
+                              onClick={() => handleRescheduleMeeting(meeting)}
+                              className="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded hover:bg-gray-50"
+                            >
                             <button 
                               onClick={() => handleRescheduleMeeting(meeting)}
                               className="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded hover:bg-gray-50"
