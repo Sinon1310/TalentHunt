@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { User, Mail, Lock, ChevronLeft, Save, X, Plus, Edit2 } from 'lucide-react';
-import axios from 'axios';
+import { useUser } from '../Contexts/UserContext';
 
 const ProfileSettings = () => {
+  const { user: authUser } = useUser();
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -41,84 +42,96 @@ const ProfileSettings = () => {
   });
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        axios.defaults.baseURL = 'http://localhost:5002';
-        axios.defaults.withCredentials = true;
+    if (!authUser) {
+      setError('Please log in to view your profile');
+      setLoading(false);
+      return;
+    }
 
-        const response = await axios.get('/profile');
-        setUserData(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-        setError(error.response?.data?.error || 'Failed to load profile');
-        setLoading(false);
-      }
+    try {
+      setUserData({
+        name: authUser.name || authUser.displayName || '',
+        email: authUser.email || '',
+        role: authUser.role || 'Student',
+        department: authUser.department || 'Computer Science',
+        bio: authUser.bio || '',
+        skills: authUser.skills || [],
+        education: authUser.education || '',
+        interests: authUser.interests || [],
+        contactEmail: authUser.email || '',
+        phone: authUser.phone || '',
+        github: authUser.github || '',
+        linkedin: authUser.linkedin || '',
+        notificationPreferences: authUser.notificationPreferences || {
+          teamRequests: true,
+          mentorMessages: true,
+          competitionUpdates: true,
+          weeklyDigest: false
+        }
+      });
+      setLoading(false);
+    } catch (error) {
+      setError('Failed to load profile data');
+      setLoading(false);
+    }
+  }, [authUser]);
+
+  const handleAddSkill = (e) => {
+    e.preventDefault();
+    const newSkillWithId = {
+      _id: Date.now().toString(),
+      ...newSkill
     };
+    setUserData({
+      ...userData,
+      skills: [...userData.skills, newSkillWithId]
+    });
+    setNewSkill({ name: '', level: 'beginner' });
+    setShowSkillModal(false);
+  };
 
-    fetchUserProfile();
-  }, []);
+  const handleRemoveSkill = (skillId) => {
+    setUserData({
+      ...userData,
+      skills: userData.skills.filter(skill => skill._id !== skillId)
+    });
+  };
 
-  const handleAddSkill = async (e) => {
+  const handleAddInterest = (e) => {
+    e.preventDefault();
+    const newInterestWithId = {
+      _id: Date.now().toString(),
+      ...newInterest
+    };
+    setUserData({
+      ...userData,
+      interests: [...userData.interests, newInterestWithId]
+    });
+    setNewInterest({ 
+      name: '', 
+      category: 'technical',
+      level: 'curious',
+      description: ''
+    });
+    setShowInterestModal(false);
+  };
+
+  const handleRemoveInterest = (interestId) => {
+    setUserData({
+      ...userData,
+      interests: userData.interests.filter(interest => interest._id !== interestId)
+    });
+  };
+
+  const handleProfileUpdate = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/profile/skills', newSkill);
-      setUserData({
-        ...userData,
-        skills: [...userData.skills, response.data]
-      });
-      setNewSkill({ name: '', level: 'beginner' });
-      setShowSkillModal(false);
+      // Here you would typically update the user data in your backend
+      // For now, we'll just update the local state
+      setIsEditing(false);
     } catch (error) {
-      console.error('Error adding skill:', error);
-      alert(error.response?.data?.error || 'Failed to add skill');
-    }
-  };
-
-  const handleRemoveSkill = async (skillId) => {
-    try {
-      await axios.delete(`/profile/skills/${skillId}`);
-      setUserData({
-        ...userData,
-        skills: userData.skills.filter(skill => skill._id !== skillId)
-      });
-    } catch (error) {
-      console.error('Error removing skill:', error);
-      alert(error.response?.data?.error || 'Failed to remove skill');
-    }
-  };
-
-  const handleAddInterest = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('/profile/interests', newInterest);
-      setUserData({
-        ...userData,
-        interests: [...userData.interests, response.data]
-      });
-      setNewInterest({ 
-        name: '', 
-        category: 'technical',
-        level: 'curious',
-        description: ''
-      });
-      setShowInterestModal(false);
-    } catch (error) {
-      console.error('Error adding interest:', error);
-      alert(error.response?.data?.error || 'Failed to add interest');
-    }
-  };
-
-  const handleRemoveInterest = async (interestId) => {
-    try {
-      await axios.delete(`/profile/interests/${interestId}`);
-      setUserData({
-        ...userData,
-        interests: userData.interests.filter(interest => interest._id !== interestId)
-      });
-    } catch (error) {
-      console.error('Error removing interest:', error);
-      alert(error.response?.data?.error || 'Failed to remove interest');
+      console.error('Error updating profile:', error);
+      alert('Failed to update profile');
     }
   };
 

@@ -4,6 +4,8 @@ import { useAdminAuth } from '../Contexts/AdminAuthContext';
 import AdminCompetitions from './AdminCompetitions';
 import AdminTeams from './AdminTeams';
 import AdminSettings from './AdminSettings';
+import FirebaseUsage from './FirebaseUsage';
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { adminUser, logout } = useAdminAuth();
@@ -235,6 +237,17 @@ const AdminDashboard = () => {
             </li>
             <li>
               <button 
+                className={`w-full flex items-center px-4 py-2 rounded-md ${activeTab === 'firebase' ? 'bg-indigo-700' : 'hover:bg-indigo-700'}`}
+                onClick={() => setActiveTab('firebase')}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Firebase Usage
+              </button>
+            </li>
+            <li>
+              <button 
                 className={`w-full flex items-center px-4 py-2 rounded-md ${activeTab === 'settings' ? 'bg-indigo-700' : 'hover:bg-indigo-700'}`}
                 onClick={() => setActiveTab('settings')}
               >
@@ -293,11 +306,9 @@ const AdminDashboard = () => {
       {activeTab === 'overview' && 'Admin Dashboard'}
       {activeTab === 'users' && 'User Management'}
       {activeTab === 'competitions' && 'Competition Management'}
-     
-{activeTab === 'competitions' && <AdminCompetitions />}
       {activeTab === 'teams' && 'Team Management'}
+      {activeTab === 'firebase' && 'Firebase Usage'}
       {activeTab === 'settings' && 'Admin Settings'}
-      {activeTab === 'settings' && <AdminSettings />}
     </h1>
   </div>
 </header>
@@ -862,6 +873,9 @@ const AdminDashboard = () => {
             </div>
           </div>
         )}
+
+        {/* Firebase Usage */}
+        {activeTab === 'firebase' && <FirebaseUsage />}
       </div>
     </div>
   );
