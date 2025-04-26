@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { ChevronLeft, Users, Plus, AlertCircle, X } from 'lucide-react';
 import { useUser } from '../Contexts/UserContext';
+import axios from 'axios';
+import { auth } from '../firebase';
 
 const TeamCreate = () => {
   const navigate = useNavigate();
@@ -21,6 +23,7 @@ const TeamCreate = () => {
 
   // Validate user is logged in
   useEffect(() => {
+    console.log('Current user:', user);
     if (!user) {
       navigate('/auth', { state: { from: `/team/new/${id}` } });
     }
@@ -37,7 +40,7 @@ const TeamCreate = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
 
@@ -46,11 +49,37 @@ const TeamCreate = () => {
       return;
     }
 
-    // Here you would typically send the data to your backend
-    console.log('Creating team:', teamData);
-    
-    // For now, we'll just navigate back to the competition page
-    navigate(`/competitions/${id}`, { replace: true });
+    try {
+      // Get the current Firebase user
+      const currentUser = auth.currentUser;
+      
+      if (!currentUser) {
+        setError('You must be logged in to create a team');
+        return;
+      }
+
+      // Make sure maxMembers is a number
+      const dataToSend = {
+        ...teamData,
+        maxMembers: parseInt(teamData.maxMembers),
+        userId: currentUser.uid // Use Firebase UID
+      };
+
+      console.log('Sending team data:', dataToSend);
+      const response = await axios.post('http://localhost:5002/api/teams', dataToSend, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (response.status === 201) {
+        console.log('Team created successfully:', response.data);
+        navigate(`/competitions/${id}`, { replace: true });
+      }
+    } catch (err) {
+      console.error('Error creating team:', err.response?.data || err);
+      setError(err.response?.data?.error || 'Failed to create team. Please try again.');
+    }
   };
 
   const handleAddSkill = (e) => {

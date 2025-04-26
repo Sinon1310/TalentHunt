@@ -6,20 +6,21 @@ const User = require("./models/users");
 const { createTest, getTests, getTestById, createSampleTest, submitTest } = require("./controllers/testController");
 const { getDashboardData, createSampleData } = require("./controllers/dashboardController");
 const { getProfile, updateProfile, addSkill, removeSkill, addInterest, removeInterest } = require("./controllers/profileController");
+const teamRoutes = require('./routes/team.routes');
 // const connectDB = require("./connectiondb");
 
 const app = express();
 
 // CORS configuration
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174'], // Allow both frontend URLs
+    origin: ['http://localhost:5173', 'http://localhost:5174'], // Allow frontend URLs
     credentials: true
 }));
 app.use(express.json());
 
 // Request logging middleware
 app.use((req, res, next) => {
-    console.log(`${req.method} ${req.url}`);
+    console.log(`${req.method} ${req.url}`, req.body);
     next();
 });
 
@@ -132,7 +133,9 @@ app.post("/tests/sample", async (req, res) => {
     }
 });
 
+// Team routes
+app.use('/api/teams', teamRoutes);
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-    console.log(`Frontend URLs allowed: http://localhost:5173, http://localhost:5174`);
 });
