@@ -19,6 +19,8 @@ import TeamCreate from './Components/TeamCreate';
 import AdminTeams from './Components/AdminTeams';
 import AdminCompetitions from './Components/AdminCompetitions';
 import StudentProgress from './Components/StudentProgress';
+import MentorProfile from './Components/MentorProfile';
+import MentorSettings from './Components/MentorSettings';
 
 // Context Providers
 import { UserProvider } from './Contexts/UserContext';
@@ -123,6 +125,22 @@ function App() {
                 <ProtectedRoute>
                   <TeamDetails />
                 </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/mentor/profile"
+              element={
+                <ProtectedMentorRoute>
+                  <MentorProfile />
+                </ProtectedMentorRoute>
+              }
+            />
+            <Route
+              path="/mentor/settings"
+              element={
+                <ProtectedMentorRoute>
+                  <MentorSettings />
+                </ProtectedMentorRoute>
               }
             />
 
