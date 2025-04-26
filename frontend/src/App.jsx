@@ -18,6 +18,7 @@ import TeamDetails from './Components/TeamDetails';
 import TeamCreate from './Components/TeamCreate';
 import AdminTeams from './Components/AdminTeams';
 import AdminCompetitions from './Components/AdminCompetitions';
+import StudentProgress from './Components/StudentProgress';
 
 // Context Providers
 import { UserProvider } from './Contexts/UserContext';
@@ -147,6 +148,14 @@ function App() {
               element={
                 <ProtectedAdminRoute>
                   <AdminCompetitions />
+                </ProtectedAdminRoute>
+              }
+            />
+            <Route
+              path="/student-progress"
+              element={
+                <ProtectedAdminRoute>
+                  <StudentProgress />
                 </ProtectedAdminRoute>
               }
             />

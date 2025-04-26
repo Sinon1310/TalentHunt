@@ -485,10 +485,15 @@ const Landing = () => {
               <p className="text-gray-400">Email: info@TalentHunt.com</p>
             </div>
           </div>
-          <Link to="/admin" className="text-gray-400 hover:text-white">
-          Admin Login
-        </Link>
           <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+            <div className="flex justify-center space-x-4">
+              <Link to="/admin" className="text-gray-400 hover:text-white">
+                Admin Login
+              </Link>
+              <Link to="/student-progress" className="text-gray-400 hover:text-white">
+                Student Progress
+              </Link>
+            </div>
             <p>&copy; {new Date().getFullYear()} TalentHunt. All rights reserved.</p>
           </div>
           
