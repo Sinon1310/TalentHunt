@@ -89,8 +89,82 @@ const getTeamById = asyncHandler(async (req, res) => {
     }
 });
 
+// @desc    Get all teams
+// @route   GET /api/teams
+// @access  Public
+const getAllTeams = asyncHandler(async (req, res) => {
+    try {
+        const teams = await Team.find()
+            .sort({ createdAt: -1 }); // Sort by creation date, newest first
+        
+        console.log('Fetched teams:', teams);
+        res.json(teams);
+    } catch (error) {
+        console.error('Error fetching teams:', error);
+        res.status(500).json({
+            error: 'Failed to fetch teams',
+            details: error.message
+        });
+    }
+});
+
+// @desc    Delete a team
+// @route   DELETE /api/teams/:id
+// @access  Public (should be protected in production)
+const deleteTeam = asyncHandler(async (req, res) => {
+    try {
+        const team = await Team.findByIdAndDelete(req.params.id);
+        
+        if (!team) {
+            return res.status(404).json({ error: 'Team not found' });
+        }
+
+        res.json({ message: 'Team deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting team:', error);
+        res.status(500).json({
+            error: 'Failed to delete team',
+            details: error.message
+        });
+    }
+});
+
+// @desc    Update team status
+// @route   PATCH /api/teams/:id/status
+// @access  Public (should be protected in production)
+const updateTeamStatus = asyncHandler(async (req, res) => {
+    try {
+        const { status } = req.body;
+        
+        if (!['pending', 'approved', 'rejected'].includes(status)) {
+            return res.status(400).json({ error: 'Invalid status' });
+        }
+
+        const team = await Team.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { new: true }
+        );
+        
+        if (!team) {
+            return res.status(404).json({ error: 'Team not found' });
+        }
+
+        res.json(team);
+    } catch (error) {
+        console.error('Error updating team status:', error);
+        res.status(500).json({
+            error: 'Failed to update team status',
+            details: error.message
+        });
+    }
+});
+
 module.exports = {
     createTeam,
     getTeamsByCompetition,
-    getTeamById
+    getTeamById,
+    getAllTeams,
+    deleteTeam,
+    updateTeamStatus
 }; 
