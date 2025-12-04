@@ -4,6 +4,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // Components
 import Landing from './Components/Landing';
 import AuthPage from './Components/AuthPage';
+import EmailVerification from './Components/EmailVerification';
+import ForgotPassword from './Components/ForgotPassword';
+import ResetPassword from './Components/ResetPassword';
 import Dashboard from './Components/Dashboard';
 import CompetitionDetails from './Components/CompetitionDetails';
 import ProfileSettings from './Components/ProfileSettings';
@@ -40,6 +43,9 @@ function App() {
             {/* Public Routes */}
             <Route path="/" element={<Landing />} />
             <Route path="/auth" element={<AuthPage />} />
+            <Route path="/auth/verify-email" element={<EmailVerification />} />
+            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+            <Route path="/auth/reset-password" element={<ResetPassword />} />
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/competitions" element={<CompetitionsPage />} />
             <Route path="/competitions/:id" element={<CompetitionDetails />} />

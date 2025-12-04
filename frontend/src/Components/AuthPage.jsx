@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, CheckCircle } from 'lucide-react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react';
 import { useUser } from '../Contexts/UserContext';
+import { authAPI } from '../api/auth';
 import { auth, googleProvider } from '../firebase';
 import {
   createUserWithEmailAndPassword,
@@ -11,9 +12,10 @@ import {
 
 const AuthPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useUser();
 
-  const [activeTab, setActiveTab] = useState('login');
+  const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'login');
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -27,6 +29,7 @@ const AuthPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
+  const [serverError, setServerError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -78,50 +81,59 @@ const AuthPage = () => {
     if (!validateForm()) return;
 
     setIsSubmitting(true);
+    setServerError('');
 
     try {
-      let userCredential;
-
       if (activeTab === 'signup') {
-        userCredential = await createUserWithEmailAndPassword(
-          auth,
-          formData.email,
-          formData.password
-        );
-      } else {
-        userCredential = await signInWithEmailAndPassword(
-          auth,
-          formData.email,
-          formData.password
-        );
-      }
+        // Register with backend
+        const response = await authAPI.register({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          role: formData.role
+        });
 
-      const firebaseUser = userCredential.user;
-
-      const userData = {
-        name: activeTab === 'login'
-          ? firebaseUser.email.split('@')[0]
-          : formData.name,
-        email: firebaseUser.email,
-        role: formData.role,
-        profileImage: firebaseUser.photoURL || null,
-        joinedDate: new Date().toISOString()
-      };
-
-      login(userData);
-
-      if (activeTab === 'login') {
-        setLoginSuccess(true);
-      } else {
         setSignupSuccess(true);
-      }
+        setTimeout(() => {
+          setActiveTab('login');
+          setSignupSuccess(false);
+        }, 2000);
 
-      setTimeout(() => {
-        navigate(formData.role === 'mentor' ? '/mentor' : '/dashboard');
-      }, 1500);
+      } else {
+        // Login with backend
+        const response = await authAPI.login({
+          email: formData.email,
+          password: formData.password
+        });
+
+        // Store token and user data
+        localStorage.setItem('token', response.token);
+        login(response.user);
+
+        setLoginSuccess(true);
+
+        // Redirect based on role and return path
+        const redirectPath = location.state?.from || 
+          (response.user.role === 'mentor' ? '/mentor/dashboard' : '/dashboard');
+        
+        setTimeout(() => {
+          navigate(redirectPath);
+        }, 1500);
+      }
     } catch (error) {
       console.error('Auth Error:', error);
-      setErrors({ email: 'Authentication failed. Try again.' });
+      const errorMessage = error.response?.data?.message || 'Authentication failed. Please try again.';
+      
+      if (error.response?.data?.errors) {
+        // Handle validation errors
+        const validationErrors = {};
+        error.response.data.errors.forEach(err => {
+          validationErrors[err.path || err.param] = err.msg;
+        });
+        setErrors(validationErrors);
+      } else {
+        setServerError(errorMessage);
+      }
     }
 
     setIsSubmitting(false);
@@ -199,7 +211,16 @@ const AuthPage = () => {
             {(loginSuccess || signupSuccess) && (
               <div className="mb-4 p-3 bg-green-100 text-green-800 rounded-lg flex items-center animate-bounce">
                 <CheckCircle size={20} className="mr-2" />
-                {loginSuccess ? 'Login successful!' : 'Account created successfully!'}
+                {loginSuccess ? 'Login successful!' : signupSuccess && activeTab === 'signup' 
+                  ? 'Account created! Please check your email to verify your account.' 
+                  : 'Registration complete! You can now log in.'}
+              </div>
+            )}
+
+            {serverError && (
+              <div className="mb-4 p-3 bg-red-100 text-red-800 rounded-lg flex items-center">
+                <AlertCircle size={20} className="mr-2" />
+                {serverError}
               </div>
             )}
 
@@ -311,6 +332,17 @@ const AuthPage = () => {
               {isSubmitting ? 'Processing...' : activeTab === 'login' ? 'Sign In' : 'Create Account'}
             </button>
 
+            {activeTab === 'login' && (
+              <div className="mb-4 text-center">
+                <Link
+                  to="/auth/forgot-password"
+                  className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
+                >
+                  Forgot your password?
+                </Link>
+              </div>
+            )}
+
             <div className="mt-4 text-center">
               <p className="text-sm text-gray-500 mb-2">or sign in with</p>
               <button
@@ -327,6 +359,18 @@ const AuthPage = () => {
               </button>
             </div>
           </form>
+
+          {/* Forgot Password Link - Only show on login tab */}
+          {activeTab === 'login' && (
+            <div className="px-8 pb-2 text-center">
+              <Link
+                to="/auth/forgot-password"
+                className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+              >
+                Forgot your password?
+              </Link>
+            </div>
+          )}
 
           <div className="px-8 pb-6 text-center text-sm">
             {activeTab === 'login' ? (
