@@ -1,69 +1,144 @@
 import React, { useState, useEffect } from 'react';
-import { Link,useNavigate } from 'react-router-dom'
-import { Users, Search, UserPlus, BarChart2, Menu, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom'
+import { 
+  Users, Search, UserPlus, BarChart2, Menu, X, ChevronLeft, ChevronRight, 
+  Sparkles, Target, Award, TrendingUp, Globe, Brain, Shield, Zap,
+  ArrowRight, Play, CheckCircle, Star, Lightbulb, Rocket, Database,
+  Clock, Code, Trophy, MessageSquare, Settings, Monitor, BookOpen
+} from 'lucide-react';
 
 const Landing = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate()
 
-  // Function to handle navigation to sign up
-  const handleCreateProfile = () => {
+  // Navigation handlers
+  const handleGetStarted = () => {
     navigate('/auth', { state: { activeTab: 'signup' } });
   };
 
-   // Function to handle navigation to competitions
-   const handleExploreCompetitions = () => {
+  const handleExploreCompetitions = () => {
     navigate('/competitions');
-   };
+  };
 
-  // Sample competitions data
+  // Featured competitions data
   const competitions = [
     {
       id: 1,
-      title: "Annual Hackathon 2025",
-      description: "Build innovative solutions for real-world problems in 48 hours.",
-      image: "https://midpenpost.org/wp-content/uploads/2023/04/IMG_3168.jpg",
-      date: "Oct 15-17, 2025"
+      title: "Global Innovation Challenge 2025",
+      description: "48-hour hackathon solving real-world sustainability problems",
+      image: "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+      date: "Jan 15-17, 2025",
+      participants: "500+ teams",
+      prize: "$50,000",
+      sdgs: [3, 7, 9, 11]
     },
     {
       id: 2,
-      title: "Design Challenge",
-      description: "Create user-centered designs for next-gen applications.",
-      image: "https://interiordesign.net/wp-content/uploads/2023/02/Interior-Design-ThinkLab-Design-Hackathon-TL23_Editorial_Image_Cover.jpg",
-      date: "Nov 5-7, 2025"
+      title: "AI for Social Good",
+      description: "Develop AI solutions addressing societal challenges",
+      image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      date: "Feb 20-22, 2025",
+      participants: "300+ teams", 
+      prize: "$30,000",
+      sdgs: [4, 8, 10]
     },
     {
       id: 3,
-      title: "AI Innovation Contest",
-      description: "Develop AI solutions that can transform industries.",
-      image: "https://framerusercontent.com/assets/8zE1cw2uW0PtSANxYynp9aKnnP8.png",
-      date: "Dec 10-12, 2025"
+      title: "Green Tech Challenge",
+      description: "Climate action through innovative technology solutions",
+      image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      date: "Mar 10-12, 2025",
+      participants: "400+ teams",
+      prize: "$40,000", 
+      sdgs: [7, 13, 15]
     }
   ];
 
-  // Sample testimonials data
+  // Success stories
   const testimonials = [
     {
       id: 1,
-      name: "Joe Rogan",
-      role: "Computer Science Student",
-      quote: "This platform helped me find teammates with complementary skills. We won our first hackathon together!",
-      avatar: "/images/demopic.jpg?"
+      name: "Sarah Chen",
+      role: "CS Student, MIT",
+      university: "Massachusetts Institute of Technology",
+      quote: "TalentHunt's AI matched me with teammates I never would have found otherwise. Our diverse skills led to winning the Global Innovation Challenge!",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b9c5d53e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=150&q=80",
+      achievement: "🏆 Winner - Global Innovation Challenge",
+      teamSize: "4 members"
     },
     {
       id: 2,
-      name: "Aditya Nambar",
-      role: "UI/UX Designer",
-      quote: "The mentor matching was perfect. Our mentor provided invaluable guidance throughout the competition.",
-      avatar: "/images/nambar.jpg?"
+      name: "Dr. Michael Rodriguez",
+      role: "Faculty Mentor",
+      university: "Stanford University",
+      quote: "The mentor matching system is incredibly sophisticated. I can effectively guide multiple teams and track their progress in real-time.",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=150&q=80",
+      achievement: "🎓 Mentored 15 winning teams",
+      teamSize: "50+ students mentored"
     },
     {
       id: 3,
-      name: "Dr. Joseph",
-      role: "Faculty Mentor",
-      quote: "As a mentor, I can easily track my teams' progress and provide timely feedback. It's a game-changer.",
-      avatar: "/images/jos.jpg?"
+      name: "Alex Kumar",
+      role: "Full-Stack Developer",
+      university: "UC Berkeley",
+      quote: "From a shy individual contributor to leading a winning team - TalentHunt helped me discover my leadership potential through smart team matching.",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=150&q=80",
+      achievement: "🚀 3x Competition Winner",
+      teamSize: "Led 12-person team"
+    }
+  ];
+
+  // Platform features
+  const features = [
+    {
+      icon: Brain,
+      title: "AI-Powered Matching",
+      description: "Advanced algorithms analyze skills, experience, and personality to create optimal team combinations",
+      stats: "96% compatibility rate"
+    },
+    {
+      icon: Target,
+      title: "SDG Impact Mapping",
+      description: "Automatically align projects with UN Sustainable Development Goals for maximum societal impact",
+      stats: "All 17 SDGs covered"
+    },
+    {
+      icon: Trophy,
+      title: "Competition Management",
+      description: "Streamlined platform for organizing, participating in, and tracking technical competitions",
+      stats: "500+ competitions hosted"
+    },
+    {
+      icon: BarChart2,
+      title: "Progress Analytics",
+      description: "Real-time insights and performance metrics to optimize team collaboration and outcomes",
+      stats: "89% success rate improvement"
+    }
+  ];
+
+  // How it works process
+  const process = [
+    {
+      step: "01",
+      title: "Create Your Profile",
+      description: "Add your skills, experience level, interests, and preferred working style. Our system analyzes hundreds of data points.",
+      icon: UserPlus,
+      color: "from-blue-500 to-purple-500"
+    },
+    {
+      step: "02", 
+      title: "Get AI-Matched",
+      description: "Our advanced algorithm finds teammates with complementary skills and compatible working styles for optimal team dynamics.",
+      icon: Brain,
+      color: "from-purple-500 to-pink-500"
+    },
+    {
+      step: "03",
+      title: "Compete & Win",
+      description: "Join competitions, get expert mentorship, track progress, and make meaningful impact aligned with global SDGs.",
+      icon: Trophy,
+      color: "from-pink-500 to-red-500"
     }
   ];
 
@@ -71,7 +146,7 @@ const Landing = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev === competitions.length - 1 ? 0 : prev + 1));
-    }, 5000);
+    }, 6000);
     return () => clearInterval(interval);
   }, [competitions.length]);
 
@@ -84,419 +159,569 @@ const Landing = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center">
-            <button 
-             // onClick={()=>navigate('/profile')}
-              className="group flex items-center space-x-3 hover:opacity-80 transition-opacity"
-            >
-              <div className="relative">
-                <img 
-                  className="w-12 h-12 object-contain" 
-                  src="http://talenthuntindia.in/assets/images/talenthunt.png" 
-                  alt="TalentHunt Logo" 
-                />
-                <div className="absolute inset-0 bg-blue-600/10 rounded-full blur-sm group-hover:blur-md transition-all duration-300"></div>
-              </div>
-              <div className="flex flex-col">
-                <div className="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  TalentHunt
+    <div className="min-h-screen bg-white">
+      {/* Modern Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-lg border-b border-gray-100">
+        <div className="container mx-auto px-6 lg:px-8 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center">
+              <button 
+                onClick={() => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })}
+                className="flex items-center space-x-3 group"
+              >
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">T</span>
                 </div>
-                <div className="text-xs text-gray-500">Find Your Perfect Team</div>
-              </div>
+                <div>
+                  <div className="text-xl font-bold text-gray-900">TalentHunt</div>
+                  <div className="text-xs text-gray-500">AI Team Formation</div>
+                </div>
+              </button>
+            </div>
+            
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-8">
+              <a href="#how-it-works" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">How It Works</a>
+              <a href="#features" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">Features</a>
+              <a href="#competitions" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">Competitions</a>
+              <Link to="/auth" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">Login</Link>
+              <button
+                onClick={handleGetStarted}
+                className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
+              >
+                Get Started
+              </button>
+            </nav>
+            
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden p-2 rounded-lg hover:bg-gray-100"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
           
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            <a href="#home" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">Home</a>
-            <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">How It Works</a>
-            <a href="#features" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">Features</a>
-            <a href="#competitions" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">Competitions</a>
-          </nav>
-          
-          <div className="hidden md:flex items-center space-x-4">
-            <Link 
-              to="/auth" 
-              className="group px-6 py-2.5 text-blue-600 font-medium hover:text-blue-700 transition-colors duration-200 relative"
-            >
-              Login
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
-            </Link>
-            <Link 
-              to="/auth" 
-              className="group px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300 hover:-translate-y-0.5"
-            >
-              Sign Up
-            </Link>
-          </div>
-          
-          {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X size={24} className="text-gray-700" /> : <Menu size={24} className="text-gray-700" />}
-          </button>
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <div className="md:hidden mt-4 py-4 border-t border-gray-100">
+              <nav className="flex flex-col space-y-4">
+                <a href="#how-it-works" className="text-gray-600 hover:text-blue-600 font-medium">How It Works</a>
+                <a href="#features" className="text-gray-600 hover:text-blue-600 font-medium">Features</a>
+                <a href="#competitions" className="text-gray-600 hover:text-blue-600 font-medium">Competitions</a>
+                <Link to="/auth" className="text-gray-600 hover:text-blue-600 font-medium">Login</Link>
+                <button
+                  onClick={handleGetStarted}
+                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-left"
+                >
+                  Get Started
+                </button>
+              </nav>
+            </div>
+          )}
         </div>
-        
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-white/95 backdrop-blur-md py-4 px-4 shadow-lg">
-            <nav className="flex flex-col space-y-4">
-              <a href="#home" className="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200">Home</a>
-              <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200">How It Works</a>
-              <a href="#features" className="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200">Features</a>
-              <a href="#competitions" className="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200">Competitions</a>
-              <div className="pt-4 flex flex-col space-y-3">
-                <Link 
-                  to="/auth" 
-                  className="px-6 py-2.5 text-blue-600 border border-blue-600 rounded-lg font-medium hover:bg-blue-50 transition-colors duration-200"
-                >
-                  Login
-                </Link>
-                <Link 
-                  to="/auth" 
-                  className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300"
-                >
-                  Sign Up
-                </Link>
-              </div>
-            </nav>
-          </div>
-        )}
       </header>
 
-     {/* Hero section */}
-<section className="relative min-h-[90vh] flex items-center bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 overflow-hidden">
-  <div className="absolute inset-0 bg-black opacity-20"></div>
-  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzYuMzY0IDM2LjM2NGwtMi44MjgtMi44MjggMi44MjgtMi44MjgtMi44MjgtMi44MjgtMi44MjggMi44MjgtMi44MjgtMi44MjgtMi44MjggMi44MjggMi44MjggMi44MjgtMi44MjggMi44MjggMi44MjggMi44MjgtMi44MjggMi44MjggMi44MjggMi44MjgtMi44Mjh6IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9Ii4xIi8+PC9nPjwvc3ZnPg==')] opacity-10"></div>
-  <div className="container mx-auto px-4 py-20 text-center text-white relative z-10">
-    <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight animate-fade-in">
-      Find the Right Team. <br className="hidden md:block" />
-      <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-500">
-        Win the Challenge.
-      </span>
-    </h1>
-    <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto opacity-90 animate-fade-in-up">
-      Connect with the perfect teammates, get expert mentorship, and track
-      your progress all in one place.
-    </p>
-    <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in-up">
-      <button
-        onClick={handleCreateProfile}
-        className="group bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
-      >
-        Create Your Profile
-      </button>
-      <button
-        onClick={handleExploreCompetitions}
-        className="group bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:-translate-y-1"
-      >
-        Explore Competitions
-      </button>
-    </div>
-  </div>
-  <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-50 to-transparent"></div>
-</section>
+      {/* Hero Section */}
+      <section id="hero" className="relative pt-20 pb-16 lg:pt-28 lg:pb-20 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-blue-400/20 to-purple-500/20 rounded-full blur-3xl -translate-x-48 -translate-y-48 animate-pulse"></div>
+          <div className="absolute top-1/2 right-0 w-80 h-80 bg-gradient-to-br from-purple-500/15 to-pink-500/15 rounded-full blur-2xl translate-x-40 animate-pulse animation-delay-300"></div>
+          <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-gradient-to-br from-indigo-400/20 to-cyan-500/20 rounded-full blur-2xl translate-y-32 animate-pulse animation-delay-700"></div>
+          
+          {/* Floating Shapes */}
+          <div className="absolute top-1/4 left-1/4 w-4 h-4 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full animate-bounce"></div>
+          <div className="absolute top-1/3 right-1/3 w-3 h-3 bg-gradient-to-br from-green-400 to-teal-500 rounded-full animate-bounce animation-delay-500"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-2 h-2 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full animate-bounce animation-delay-1000"></div>
+        </div>
+
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center space-y-8">
+              {/* Badge */}
+              <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-purple-200/50 rounded-full text-purple-700 font-semibold text-sm shadow-lg">
+                <Sparkles className="w-4 h-4 mr-2 text-yellow-500" />
+                AI-Powered Team Formation for Technical Competitions
+              </div>
+              
+              {/* Main Heading */}
+              <h1 className="text-5xl lg:text-7xl font-black text-gray-900 leading-tight">
+                Build Winning Teams.
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 animate-pulse">
+                  Automatically.
+                </span>
+              </h1>
+              
+              {/* Subheading */}
+              <p className="text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+                Revolutionary MERN platform that uses advanced AI to match students with complementary skills, 
+                assigns expert mentors, and maps projects to UN SDGs for meaningful global impact.
+              </p>
+              
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-6 justify-center pt-4">
+                <button
+                  onClick={handleGetStarted}
+                  className="group px-10 py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white rounded-2xl font-semibold text-lg shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:-translate-y-1 hover:scale-105"
+                >
+                  <span className="flex items-center justify-center">
+                    Start Building Teams
+                    <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </button>
+                
+                <button
+                  onClick={handleExploreCompetitions}
+                  className="group px-10 py-4 bg-white/90 backdrop-blur-sm border-2 border-purple-200 text-purple-700 hover:border-purple-400 hover:text-purple-800 hover:bg-purple-50 rounded-2xl font-semibold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-purple-200/50"
+                >
+                  <span className="flex items-center justify-center">
+                    <Trophy className="mr-2 w-5 h-5 text-yellow-500" />
+                    Explore Competitions
+                  </span>
+                </button>
+              </div>
+              
+              {/* Feature Highlights */}
+              <div className="flex flex-wrap justify-center gap-6 pt-8 text-sm">
+                <div className="flex items-center space-x-2 text-gray-700 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-green-200/50">
+                  <div className="w-2 h-2 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full animate-pulse"></div>
+                  <span className="font-semibold">Free to Join</span>
+                </div>
+                <div className="flex items-center space-x-2 text-gray-700 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-blue-200/50">
+                  <div className="w-2 h-2 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-full animate-pulse"></div>
+                  <span className="font-semibold">AI-Powered Matching</span>
+                </div>
+                <div className="flex items-center space-x-2 text-gray-700 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-purple-200/50">
+                  <div className="w-2 h-2 bg-gradient-to-br from-purple-400 to-violet-500 rounded-full animate-pulse"></div>
+                  <span className="font-semibold">Expert Mentorship</span>
+                </div>
+                <div className="flex items-center space-x-2 text-gray-700 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-orange-200/50">
+                  <div className="w-2 h-2 bg-gradient-to-br from-orange-400 to-red-500 rounded-full animate-pulse"></div>
+                  <span className="font-semibold">Global Impact</span>
+                </div>
+              </div>
+              
+              {/* Trust Indicators */}
+              <div className="grid grid-cols-3 gap-8 pt-12">
+                <div className="text-center group">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <Users className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <div className="text-3xl lg:text-4xl font-bold text-gray-900">2,500+</div>
+                  <div className="text-gray-600">Students Matched</div>
+                </div>
+                <div className="text-center group">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <TrendingUp className="w-8 h-8 text-green-600" />
+                  </div>
+                  <div className="text-3xl lg:text-4xl font-bold text-gray-900">96%</div>
+                  <div className="text-gray-600">Success Rate</div>
+                </div>
+                <div className="text-center group">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <BookOpen className="w-8 h-8 text-purple-600" />
+                  </div>
+                  <div className="text-3xl lg:text-4xl font-bold text-gray-900">50+</div>
+                  <div className="text-gray-600">Universities</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-              How It Works
-            </span>
-          </h2>
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="group text-center p-8 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-gradient-to-b from-white to-gray-50">
-              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-6 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                <Users className="text-white" size={32} />
-              </div>
-              <h3 className="text-2xl font-semibold mb-4 text-gray-800">Create Your Profile</h3>
-              <p className="text-gray-600 leading-relaxed">Add your skills, experience, and interests to find the perfect match for your next competition.</p>
+      <section id="how-it-works" className="py-20 bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute -top-20 -right-20 w-96 h-96 bg-gradient-to-br from-blue-200/20 to-purple-200/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-gradient-to-br from-green-200/20 to-blue-200/20 rounded-full blur-3xl animate-pulse"></div>
+        </div>
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent">
+                How It Works
+              </h2>
+              <p className="text-xl text-gray-700 max-w-3xl mx-auto">
+                Three simple steps to form winning teams and compete in meaningful challenges
+              </p>
             </div>
-            <div className="group text-center p-8 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-gradient-to-b from-white to-gray-50">
-              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-6 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                <Search className="text-white" size={32} />
-              </div>
-              <h3 className="text-2xl font-semibold mb-4 text-gray-800">Get Matched</h3>
-              <p className="text-gray-600 leading-relaxed">Our smart algorithm matches you with teammates who complement your skills and experience.</p>
-            </div>
-            <div className="group text-center p-8 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-gradient-to-b from-white to-gray-50">
-              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-6 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                <UserPlus className="text-white" size={32} />
-              </div>
-              <h3 className="text-2xl font-semibold mb-4 text-gray-800">Request a Mentor</h3>
-              <p className="text-gray-600 leading-relaxed">Get expert guidance from experienced faculty mentors and track your team's progress.</p>
+            
+            <div className="grid lg:grid-cols-3 gap-12">
+              {process.map((step, index) => {
+                const IconComponent = step.icon;
+                return (
+                  <div key={index} className="relative">
+                    {/* Connection Line */}
+                    {index < process.length - 1 && (
+                      <div className="hidden lg:block absolute top-16 left-full w-full h-px bg-gradient-to-r from-blue-300/50 via-purple-300/50 to-transparent z-0"></div>
+                    )}
+                    
+                    {/* Floating Arrow */}
+                    {index < process.length - 1 && (
+                      <div className="hidden lg:block absolute top-14 left-full w-full z-0">
+                        <ArrowRight className="absolute right-4 w-6 h-6 text-blue-400 animate-pulse" />
+                      </div>
+                    )}
+                    
+                    <div className="relative z-10 text-center">
+                      <div className={`inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br ${step.color} rounded-2xl mb-6 shadow-xl`}>
+                        <IconComponent className="w-10 h-10 text-white" />
+                      </div>
+                      
+                      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/50 hover:border-purple-200/50 transform hover:-translate-y-1">
+                        <div className="text-sm font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">STEP {step.step}</div>
+                        <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">{step.title}</h3>
+                        <p className="text-gray-600 leading-relaxed">{step.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-              Key Features
-            </span>
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-4 rounded-xl w-14 h-14 flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                <Users className="text-white" size={24} />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Automated Team Formation</h3>
-              <p className="text-gray-600 leading-relaxed">Our smart algorithm matches students based on complementary skills and experience.</p>
+      <section id="features" className="relative py-20 bg-gradient-to-br from-indigo-50 via-purple-50/30 to-pink-50/30 overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0">
+          <div className="absolute top-10 right-20 w-72 h-72 bg-gradient-to-br from-purple-200/30 to-pink-200/30 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 left-20 w-72 h-72 bg-gradient-to-br from-blue-200/30 to-indigo-200/30 rounded-full blur-3xl animate-pulse"></div>
+        </div>
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-40">
+          <div className="absolute top-1/4 right-1/4 w-2 h-2 bg-blue-300 rounded-full animate-pulse"></div>
+          <div className="absolute top-3/4 left-1/4 w-1 h-1 bg-purple-300 rounded-full animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/3 w-1.5 h-1.5 bg-indigo-300 rounded-full animate-pulse"></div>
+        </div>
+        
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Powerful Features
+              </h2>
+              <p className="text-xl text-gray-700 max-w-3xl mx-auto">
+                Everything you need to build successful teams and compete at the highest level
+              </p>
             </div>
-            <div className="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-4 rounded-xl w-14 h-14 flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                <Search className="text-white" size={24} />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Skill-Based Search</h3>
-              <p className="text-gray-600 leading-relaxed">Find teammates with specific skills that your team needs to succeed.</p>
-            </div>
-            <div className="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-4 rounded-xl w-14 h-14 flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                <UserPlus className="text-white" size={24} />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Mentor Allocation</h3>
-              <p className="text-gray-600 leading-relaxed">Get matched with faculty mentors who can provide guidance and feedback.</p>
-            </div>
-            <div className="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-4 rounded-xl w-14 h-14 flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                <BarChart2 className="text-white" size={24} />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Progress Tracking</h3>
-              <p className="text-gray-600 leading-relaxed">Monitor your team's progress and get insights to improve performance.</p>
+            
+            <div className="grid lg:grid-cols-2 gap-12">
+              {features.map((feature, index) => {
+                const IconComponent = feature.icon;
+                return (
+                  <div key={index} className="group bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/50 hover:border-purple-200/50 transform hover:-translate-y-2">
+                    <div className="flex items-start space-x-6">
+                      <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                        <IconComponent className="w-8 h-8 text-white" />
+                      </div>
+                      
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3">{feature.title}</h3>
+                        <p className="text-gray-600 mb-4 leading-relaxed">{feature.description}</p>
+                        <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 text-purple-700 rounded-full text-sm font-semibold border border-purple-100">
+                          {feature.stats}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Competitions Showcase */}
-      <section id="competitions" className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-              Upcoming Competitions
-            </span>
-          </h2>
-          
-          <div className="relative max-w-5xl mx-auto">
-            <div className="overflow-hidden rounded-2xl shadow-xl">
-              <div 
-                className="flex transition-transform duration-500 ease-in-out" 
-                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-              >
-                {competitions.map((competition) => (
-                  <div key={competition.id} className="flex-shrink-0 w-full">
-                    <div className="relative h-96">
-                      <img 
-                        src={competition.image} 
-                        alt={competition.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/20">
-                        <div className="absolute bottom-0 left-0 right-0 p-8">
-                          <h3 className="text-3xl font-bold text-white mb-2">{competition.title}</h3>
-                          <p className="text-gray-200 mb-4">{competition.description}</p>
-                          <div className="flex items-center justify-between">
-                            <span className="text-gray-300">{competition.date}</span>
+      {/* Competitions Section */}
+      <section id="competitions" className="py-20 bg-gradient-to-br from-emerald-50 via-teal-50/30 to-cyan-50/30 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-10 w-64 h-64 bg-gradient-to-br from-emerald-200/20 to-teal-200/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-64 h-64 bg-gradient-to-br from-cyan-200/20 to-blue-200/20 rounded-full blur-3xl animate-pulse"></div>
+        </div>
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+                Featured Competitions
+              </h2>
+              <p className="text-xl text-gray-700 max-w-3xl mx-auto">
+                Join exciting challenges that create real-world impact and advance your career
+              </p>
+            </div>
+            
+            <div className="relative">
+              <div className="overflow-hidden rounded-3xl">
+                <div 
+                  className="flex transition-transform duration-500 ease-in-out" 
+                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                >
+                  {competitions.map((competition) => (
+                    <div key={competition.id} className="flex-shrink-0 w-full">
+                      <div className="relative h-[500px] bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-900 overflow-hidden rounded-2xl shadow-2xl">
+                        <img 
+                          src={competition.image} 
+                          alt={competition.title}
+                          className="absolute inset-0 w-full h-full object-cover opacity-60"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-emerald-900/40 to-transparent"></div>
+                        
+                        <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-12">
+                          <div className="max-w-4xl">
+                            <div className="flex items-center space-x-4 mb-4">
+                              {competition.sdgs.map((sdg) => (
+                                <div key={sdg} className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center text-white font-bold">
+                                  {sdg}
+                                </div>
+                              ))}
+                            </div>
+                            
+                            <h3 className="text-4xl lg:text-5xl font-bold text-white mb-4">{competition.title}</h3>
+                            <p className="text-xl text-gray-200 mb-6 max-w-2xl">{competition.description}</p>
+                            
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                              <div className="bg-gradient-to-br from-white/20 to-emerald-500/20 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
+                                <div className="text-white font-bold text-lg">{competition.date}</div>
+                                <div className="text-emerald-200 text-sm">Date</div>
+                              </div>
+                              <div className="bg-gradient-to-br from-white/20 to-teal-500/20 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
+                                <div className="text-white font-bold text-lg">{competition.participants}</div>
+                                <div className="text-teal-200 text-sm">Participants</div>
+                              </div>
+                              <div className="bg-gradient-to-br from-white/20 to-cyan-500/20 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
+                                <div className="text-white font-bold text-lg">{competition.prize}</div>
+                                <div className="text-cyan-200 text-sm">Prize Pool</div>
+                              </div>
+                              <div className="bg-gradient-to-br from-white/20 to-blue-500/20 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
+                                <div className="text-white font-bold text-lg">Global</div>
+                                <div className="text-blue-200 text-sm">Impact</div>
+                              </div>
+                            </div>
+                            
                             <button 
                               onClick={() => navigate(`/competitions/${competition.id}`)}
-                              className="px-6 py-2 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition"
+                              className="px-8 py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white rounded-2xl font-semibold hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-white/20"
                             >
-                              View Details
+                              Register Now
                             </button>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  ))}
+                </div>
+              </div>
+              
+              <button 
+                className="absolute top-1/2 left-4 -translate-y-1/2 bg-gradient-to-r from-emerald-500/90 to-teal-500/90 backdrop-blur-sm p-3 rounded-full shadow-xl hover:from-emerald-600 hover:to-teal-600 transition-all duration-300 border border-white/30"
+                onClick={prevSlide}
+              >
+                <ChevronLeft size={24} className="text-white" />
+              </button>
+              
+              <button 
+                className="absolute top-1/2 right-4 -translate-y-1/2 bg-gradient-to-r from-emerald-500/90 to-teal-500/90 backdrop-blur-sm p-3 rounded-full shadow-xl hover:from-emerald-600 hover:to-teal-600 transition-all duration-300 border border-white/30"
+                onClick={nextSlide}
+              >
+                <ChevronRight size={24} className="text-white" />
+              </button>
+              
+              <div className="flex justify-center mt-8 space-x-3">
+                {competitions.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`h-3 rounded-full transition-all duration-300 ${
+                      currentSlide === index ? 'bg-gradient-to-r from-emerald-600 to-teal-600 w-8' : 'bg-gray-300 w-3'
+                    }`}
+                    onClick={() => setCurrentSlide(index)}
+                  />
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Success Stories */}
+      <section className="relative py-20 bg-gradient-to-br from-rose-50 via-pink-50/30 to-purple-50/30 overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 right-20 w-80 h-80 bg-gradient-to-br from-rose-200/20 to-pink-200/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-br from-purple-200/20 to-indigo-200/20 rounded-full blur-3xl animate-pulse"></div>
+        </div>
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-br from-purple-100/30 to-blue-100/30 rounded-full translate-x-36 -translate-y-36"></div>
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-br from-blue-100/20 to-indigo-100/20 rounded-full -translate-x-40 translate-y-40"></div>
+        </div>
+        
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
+                Success Stories
+              </h2>
+              <p className="text-xl text-gray-700">
+                Real results from our community of innovators
+              </p>
+            </div>
             
-            <button 
-              className="absolute top-1/2 left-4 -translate-y-1/2 bg-white/90 p-3 rounded-full shadow-lg hover:bg-white transition-all duration-300 hover:-translate-x-1"
-              onClick={prevSlide}
-            >
-              <ChevronLeft size={24} className="text-blue-600" />
-            </button>
-            
-            <button 
-              className="absolute top-1/2 right-4 -translate-y-1/2 bg-white/90 p-3 rounded-full shadow-lg hover:bg-white transition-all duration-300 hover:translate-x-1"
-              onClick={nextSlide}
-            >
-              <ChevronRight size={24} className="text-blue-600" />
-            </button>
-            
-            <div className="flex justify-center mt-8 space-x-3">
-              {competitions.map((_, index) => (
-                <button
-                  key={index}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    currentSlide === index ? 'bg-blue-600 w-6' : 'bg-gray-300 hover:bg-gray-400'
-                  }`}
-                  onClick={() => setCurrentSlide(index)}
-                />
+            <div className="grid md:grid-cols-3 gap-8">
+              {testimonials.map((testimonial) => (
+                <div key={testimonial.id} className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/50 hover:border-pink-200/50 transform hover:-translate-y-2">
+                  <div className="flex items-center mb-6">
+                    <img 
+                      src={testimonial.avatar} 
+                      alt={testimonial.name} 
+                      className="w-16 h-16 rounded-2xl object-cover mr-4 ring-2 ring-gradient-to-br from-pink-200 to-purple-200"
+                    />
+                    <div>
+                      <h3 className="font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent text-lg">{testimonial.name}</h3>
+                      <p className="bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent font-medium">{testimonial.role}</p>
+                      <p className="text-gray-500 text-sm">{testimonial.university}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                  
+                  <p className="text-gray-700 mb-6 leading-relaxed">"{testimonial.quote}"</p>
+                  
+                  <div className="space-y-2">
+                    <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-50 to-emerald-50 text-emerald-700 rounded-full text-sm font-semibold border border-emerald-100">
+                      {testimonial.achievement}
+                    </div>
+                    <div className="text-gray-500 text-sm">{testimonial.teamSize}</div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
-          
-          <div className="text-center mt-12">
-            <button 
-              onClick={handleExploreCompetitions}
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium text-lg hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-            >
-              View All Competitions
-            </button>
-          </div>
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">What Our Users Say</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial) => (
-              <div key={testimonial.id} className="bg-white p-6 rounded-lg shadow-md">
-                <div className="flex items-center mb-4">
-                  <img 
-                    src={testimonial.avatar || "/placeholder.svg"} 
-                    alt={testimonial.name} 
-                    className="w-16 h-16 rounded-full mr-4"
-                    
-                  />
-                  <div>
-                    <h3 className="font-semibold">{testimonial.name}</h3>
-                    <p className="text-sm text-gray-600">{testimonial.role}</p>
-                  </div>
-                </div>
-                <p className="text-gray-700 italic">"{testimonial.quote}"</p>
-              </div>
-            ))}
-          </div>
+      {/* Final CTA */}
+      <section className="py-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-10 left-10 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-300/20 rounded-full blur-3xl animate-pulse"></div>
         </div>
-      </section>
-
-      {/* Clean Call to Action */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600"></div>
-        
-        {/* Animated Background Circles */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-white opacity-5 rounded-full"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white opacity-5 rounded-full"></div>
-        </div>
-
-        <div className="container mx-auto px-4 relative">
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <Link 
-              to="/auth" 
-              className="group inline-block text-center hover:-translate-y-1 transition-all duration-300"
-            >
-              <div className="text-white space-y-4">
-                <h2 className="text-4xl font-light mb-2">
-                  Ready to start your journey?
-                </h2>
-                <p className="text-white/80 text-lg font-light">
-                  Join our community of innovators today
-                </p>
-                <div className="flex items-center justify-center gap-2 text-white/90 mt-6 group-hover:text-white">
-                  <span className="text-sm uppercase tracking-wider">Get Started</span>
-                  <svg 
-                    className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth="2" 
-                      d="M13 7l5 5m0 0l-5 5m5-5H6"
-                    />
-                  </svg>
-                </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6 drop-shadow-lg">
+              Ready to Build Your Winning Team?
+            </h2>
+            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto drop-shadow">
+              Join thousands of students and mentors creating meaningful impact through intelligent collaboration
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <button
+                onClick={handleGetStarted}
+                className="group px-10 py-4 bg-gradient-to-r from-white to-gray-50 text-purple-600 rounded-2xl font-semibold text-lg hover:from-gray-50 hover:to-white transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border-2 border-white/20"
+              >
+                <span className="flex items-center justify-center">
+                  Start Building Teams
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </button>
+              <button
+                onClick={handleExploreCompetitions}
+                className="group px-10 py-4 border-2 border-white/30 text-white hover:bg-white/10 rounded-2xl font-semibold text-lg transition-all duration-300 hover:-translate-y-1"
+              >
+                <span className="flex items-center justify-center">
+                  <Trophy className="mr-2 w-5 h-5" />
+                  Explore Competitions
+                </span>
+              </button>
+            </div>
+            
+            {/* Key Statistics */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12 max-w-2xl mx-auto">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-1">15K+</div>
+                <div className="text-white/80 text-sm">Active Students</div>
               </div>
-            </Link>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-1">98%</div>
+                <div className="text-white/80 text-sm">Success Rate</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-1">500+</div>
+                <div className="text-white/80 text-sm">Competitions</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
+      {/* Clean Footer */}
+      <footer className="bg-gray-900 text-white py-16">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             <div>
-              <h3 className="text-xl font-bold mb-4">TalentHunt</h3>
-              <p className="text-gray-400">Connecting students, mentors, and competitions for better team experiences.</p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white transition">Home</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition">About Us</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition">Competitions</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition">Contact</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Resources</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white transition">Help Center</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition">Blog</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition">FAQ</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Connect With Us</h4>
-              <div className="flex space-x-4 mb-4">
-                <a href="#" className="text-gray-400 hover:text-white transition">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" />
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                  </svg>
-                </a>
-               
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+                  <span className="text-white font-bold">T</span>
+                </div>
+                <div className="text-xl font-bold">TalentHunt</div>
               </div>
-              <p className="text-gray-400">Email: info@TalentHunt.com</p>
+              <p className="text-gray-400 mb-6">
+                AI-powered team formation for technical competitions and meaningful global impact.
+              </p>
             </div>
-          </div>
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-            <div className="flex justify-center space-x-4">
-              <Link to="/admin" className="text-gray-400 hover:text-white">
-                Admin Login
-              </Link>
-              <Link to="/student-progress" className="text-gray-400 hover:text-white">
-                Student Progress
-              </Link>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Platform</h4>
+              <ul className="space-y-2">
+                <li><a href="#how-it-works" className="text-gray-400 hover:text-white transition-colors">How It Works</a></li>
+                <li><a href="#features" className="text-gray-400 hover:text-white transition-colors">Features</a></li>
+                <li><a href="#competitions" className="text-gray-400 hover:text-white transition-colors">Competitions</a></li>
+              </ul>
             </div>
-            <p>&copy; {new Date().getFullYear()} TalentHunt. All rights reserved.</p>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Access</h4>
+              <ul className="space-y-2">
+                <li><Link to="/admin" className="text-gray-400 hover:text-white transition-colors">Admin Portal</Link></li>
+                <li><Link to="/mentor" className="text-gray-400 hover:text-white transition-colors">Mentor Dashboard</Link></li>
+                <li><Link to="/auth" className="text-gray-400 hover:text-white transition-colors">Student Login</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Contact</h4>
+              <ul className="space-y-2">
+                <li><a href="mailto:support@talenthunt.com" className="text-gray-400 hover:text-white transition-colors">Support</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Terms of Service</a></li>
+              </ul>
+            </div>
           </div>
           
+          <div className="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-gray-400 text-sm">
+              &copy; {new Date().getFullYear()} TalentHunt. All rights reserved.
+            </p>
+            <div className="flex items-center space-x-6 mt-4 md:mt-0">
+              <div className="flex items-center space-x-2 text-gray-400 text-sm">
+                <Brain className="w-4 h-4" />
+                <span>Powered by AI</span>
+              </div>
+              <div className="flex items-center space-x-2 text-gray-400 text-sm">
+                <Globe className="w-4 h-4" />
+                <span>Global Impact</span>
+              </div>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
