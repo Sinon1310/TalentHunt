@@ -8,6 +8,7 @@ require("dotenv").config();
 // Import routes
 const authRoutes = require('./routes/auth.routes');
 const teamRoutes = require('./routes/team.routes');
+const advancedProfileRoutes = require('./routes/advancedProfile.routes');
 
 // Import controllers
 const { createTest, getTests, getTestById, createSampleTest, submitTest } = require("./controllers/testController");
@@ -86,6 +87,7 @@ connectDB();
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/teams', teamRoutes);
+app.use('/api/profile', advancedProfileRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

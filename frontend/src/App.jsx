@@ -8,6 +8,8 @@ import EmailVerification from './Components/EmailVerification';
 import ForgotPassword from './Components/ForgotPassword';
 import ResetPassword from './Components/ResetPassword';
 import Dashboard from './Components/Dashboard';
+// import AdvancedProfile from './Components/AdvancedProfile';
+// import OnboardingWizard from './Components/OnboardingWizard';
 import CompetitionDetails from './Components/CompetitionDetails';
 import ProfileSettings from './Components/ProfileSettings';
 import TeamManagement from './Components/TeamManagement';
@@ -67,6 +69,22 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            {/* <Route
+              path="/profile/advanced"
+              element={
+                <ProtectedRoute>
+                  <AdvancedProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/onboarding"
+              element={
+                <ProtectedRoute>
+                  <OnboardingWizard />
+                </ProtectedRoute>
+              }
+            /> */}
             <Route
               path="/team/new/:id"
               element={
