@@ -5,11 +5,11 @@ import {
     CheckCircle, ArrowRight, ArrowLeft, ChevronRight, Lightbulb,
     MapPin, Clock, Code, Briefcase, Camera, Upload
 } from 'lucide-react';
-import { useAuth } from '../Contexts/UserContext';
+import { useUser } from '../Contexts/UserContext';
 import { profileApi } from '../api/profile';
 
 const OnboardingWizard = () => {
-    const { user, token } = useAuth();
+    const { user, token } = useUser();
     const navigate = useNavigate();
 
     const [currentStep, setCurrentStep] = useState(0);

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ChevronLeft, User, Users, Calendar, AlertCircle, Plus, RefreshCw } from 'lucide-react';
-import axios from 'axios';
+import { teamsApi } from '../api/teams';
+import { useUser } from '../Contexts/UserContext';
 
 const TeamManagement = () => {
   const navigate = useNavigate();
+  const { user } = useUser();
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,19 +14,21 @@ const TeamManagement = () => {
   const [statusFilter, setStatusFilter] = useState('all');
 
   useEffect(() => {
-    fetchTeams();
-  }, []);
+    if (user) {
+      fetchTeams();
+    }
+  }, [user]);
 
   const fetchTeams = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5002/api/teams');
-      console.log('Fetched teams:', response.data);
-      setTeams(response.data);
+      const response = await teamsApi.getMyTeams();
+      console.log('Fetched teams:', response);
+      setTeams(response.data?.teams || response.teams || []);
       setError(null);
     } catch (err) {
       console.error('Error fetching teams:', err);
-      setError('Failed to load teams');
+      setError('Failed to load teams: ' + (err.response?.data?.message || err.message));
     } finally {
       setLoading(false);
     }

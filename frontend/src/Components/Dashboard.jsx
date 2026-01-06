@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Users, Calendar, MessageSquare, Award, Search, Bell, ChevronDown, User, X } from 'lucide-react';
 import Sidebar from './Sidebar';
 import { useUser } from '../Contexts/UserContext';
+import { profileApi } from '../api/profile';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -10,8 +11,47 @@ const Dashboard = () => {
   const [showReplyModal, setShowReplyModal] = useState(false);
   const [replyMessage, setReplyMessage] = useState('');
   const [selectedMentor, setSelectedMentor] = useState(null);
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { user, logout } = useUser();
+  const { user, logout, updateUser } = useUser();
+
+  // Load user profile data on component mount
+  useEffect(() => {
+    const loadProfileData = async () => {
+      try {
+        console.log('Loading profile data...', { user, token: localStorage.getItem('token') });
+        const response = await profileApi.getProfile();
+        console.log('Profile response:', response);
+        
+        setProfileData({
+          ...response.data.user,
+          profileCompleteness: response.data.profileCompleteness
+        });
+        updateUser({
+          ...response.data.user,
+          profileCompleteness: response.data.profileCompleteness
+        });
+        
+        // Redirect to onboarding if profile is not complete
+        if (!response.data.user.onboarding?.completed && response.data.profileCompleteness < 50) {
+          console.log('Redirecting to onboarding - profile incomplete');
+          navigate('/onboarding');
+          return;
+        }
+        
+        setLoading(false);
+      } catch (error) {
+        console.error('Error loading profile data:', error);
+        console.error('Error details:', error.response?.data);
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      loadProfileData();
+    }
+  }, [user, navigate, updateUser]);
 
   // Handle logout
   const handleLogout = () => {
@@ -172,6 +212,18 @@ const Dashboard = () => {
     );
   };
 
+  // Show loading state while profile data is being loaded
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
+          <p className="mt-4 text-gray-600">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200">
       {/* Header */}
@@ -259,8 +311,34 @@ const Dashboard = () => {
           {/* Main Dashboard Content */}
           <div className="flex-1 ml-0 md:ml-8">
             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 mb-8 text-white shadow-lg">
-              <h1 className="text-3xl font-bold mb-2">Welcome Back, {user?.name || 'User'}!</h1>
-              <p className="text-blue-100">Ready to showcase your talent?</p>
+              <h1 className="text-3xl font-bold mb-2">Welcome Back, {profileData?.name || user?.name || 'User'}!</h1>
+              <p className="text-blue-100 mb-4">
+                {profileData?.bio || "Ready to showcase your talent and find amazing teammates!"}
+              </p>
+              
+              {/* Profile Completeness Bar */}
+              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-blue-100">Profile Completeness</span>
+                  <span className="text-sm font-bold text-white">
+                    {profileData?.profileCompleteness || 0}%
+                  </span>
+                </div>
+                <div className="w-full bg-white/20 rounded-full h-2">
+                  <div 
+                    className="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${profileData?.profileCompleteness || 0}%` }}
+                  ></div>
+                </div>
+                {(profileData?.profileCompleteness || 0) < 100 && (
+                  <button 
+                    onClick={() => navigate('/profile')}
+                    className="mt-2 text-sm text-yellow-200 hover:text-white font-medium"
+                  >
+                    Complete your profile →
+                  </button>
+                )}
+              </div>
             </div>
             
             {/* Stats Cards */}

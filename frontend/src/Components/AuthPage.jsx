@@ -106,9 +106,8 @@ const AuthPage = () => {
           password: formData.password
         });
 
-        // Store token and user data
-        localStorage.setItem('token', response.token);
-        login(response.user);
+        // Store token and user data using updated login method
+        login(response.user, response.token);
 
         setLoginSuccess(true);
 
@@ -140,28 +139,42 @@ const AuthPage = () => {
   };
 
   const handleGoogleSignIn = async () => {
+    setIsSubmitting(true);
+    setServerError('');
+    
     try {
+      // Step 1: Authenticate with Firebase
       const result = await signInWithPopup(auth, googleProvider);
       const firebaseUser = result.user;
 
+      // Step 2: Send user data to your backend
       const userData = {
         name: firebaseUser.displayName || firebaseUser.email.split('@')[0],
         email: firebaseUser.email,
         role: 'student',
         profileImage: firebaseUser.photoURL || null,
-        joinedDate: new Date().toISOString()
+        firebaseUID: firebaseUser.uid
       };
 
-      login(userData);
+      // Step 3: Register/Login with your backend
+      const response = await authAPI.googleAuth(userData);
+
+      // Step 4: Store token and user data
+      login(response.user, response.token);
       setLoginSuccess(true);
 
+      // Step 5: Navigate to dashboard
       setTimeout(() => {
         navigate('/dashboard');
       }, 1500);
+      
     } catch (error) {
       console.error('Google Sign-In Error:', error);
-      setErrors({ email: 'Google Sign-In failed. Try again.' });
+      const errorMessage = error.response?.data?.message || 'Google Sign-In failed. Please try again.';
+      setServerError(errorMessage);
     }
+    
+    setIsSubmitting(false);
   };
 
   return (

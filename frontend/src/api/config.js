@@ -37,3 +37,23 @@ api.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+// Generic API request function
+export const apiRequest = async (endpoint, options = {}) => {
+    try {
+        const response = await api({
+            url: endpoint,
+            method: options.method || 'GET',
+            data: options.body ? JSON.parse(options.body) : undefined,
+            params: options.params,
+            headers: {
+                ...options.headers
+            }
+        });
+        
+        return response.data;
+    } catch (error) {
+        console.error('API Request Error:', error);
+        throw error.response?.data || error;
+    }
+};

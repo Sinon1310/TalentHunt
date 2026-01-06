@@ -41,5 +41,11 @@ export const authAPI = {
     logout: async () => {
         const response = await api.post('/api/auth/logout');
         return response.data;
+    },
+
+    // Google authentication
+    googleAuth: async (userData) => {
+        const response = await api.post('/api/auth/google', userData);
+        return response.data;
     }
 };
